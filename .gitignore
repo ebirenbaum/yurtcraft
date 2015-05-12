@@ -26,3 +26,10 @@
 *.exe
 *.out
 *.app
+yurtcraft
+
+# Qt user files
+*.pro.user*
+
+# Log files
+demo-log.txt
