@@ -1,10 +1,11 @@
 #include "mcworld.h"
+#include "fireball.h"
 
 McWorld::McWorld(int seed, VRCamera *cam) : World(cam), m_time(0), m_removeHeld(false), m_timeRemove(0) {
     m_system = new VoxelSystem(/*"atlas"*/);
     m_system->setChunkFactory(new McChunkFactory(seed));
 
-    m_player = new Player(Vector3(0,40,0), m_system, m_camera);
+    m_player = new Player(Vector3(0,20,0), m_system, m_camera);
     m_entities.push_back(m_player);
 
     setGravity(Vector3(0,-15,0));
@@ -72,7 +73,7 @@ void McWorld::draw(Graphics *g) {
     m_skybox.draw(g);
     glPopMatrix();
 
-    adjustLighting();
+//    adjustLighting();
 
     m_system->draw(g);
     World::draw(g);
@@ -105,7 +106,6 @@ void McWorld::draw(Graphics *g) {
             g->disableBlend();
         }
     }
-
 }
 
 void McWorld::drawHUD(Graphics *g, const Vector2 &dim) {
@@ -136,22 +136,20 @@ void McWorld::adjustLighting() {
 void McWorld::mousePressed(MouseEvent *event) {
     m_player->mousePressed(event);
 
-    if (event->button == MOUSE_LEFT) {
-        m_removeHeld = true;
-    }
-
     if (event->button == MOUSE_RIGHT) {
         Vector3 toAdd = m_selected.p + m_selected.n;
         m_system->setBlock(toAdd, m_player->m_block);
+    }
+
+    if (event->button == MOUSE_LEFT) {
+        Vector3 base = m_camera->getEye() + m_camera->getLook(),
+                dir = m_camera->getLook() * 0;
+        m_entities.push_back(new Fireball(base, dir));
     }
 }
 
 void McWorld::mouseReleased(MouseEvent *event) {
     m_player->mouseReleased(event);
-
-    if (event->button == MOUSE_LEFT) {
-        m_removeHeld = false;
-    }
 }
 
 void McWorld::mouseMoved(const Vector2 &delta) {

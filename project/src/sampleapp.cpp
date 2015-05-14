@@ -33,6 +33,8 @@ void SampleApp::initGL()
     m_graphics->loadTexture("./res/img/skybox/negx.png", "skyboxleft");
     m_graphics->loadTexture("./res/img/skybox/posx.png", "skyboxright");
 
+    m_graphics->loadTexture("./res/img/particle.png", "particle");
+
     for (int i = 0; i < 10; i++) {
         m_graphics->loadTexture(appendNum("./res/img/breaking/", i).append(".png"),
                                appendNum("break", i));

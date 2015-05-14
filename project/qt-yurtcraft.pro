@@ -34,7 +34,10 @@ SOURCES += \
     src/collisions.cpp \
     src/chunkfactory.cpp \
     src/chunk.cpp \
-    src/aab.cpp
+    src/aab.cpp \
+    src/particlefireball.cpp \
+    src/particleemitter.cpp \
+    src/fireball.cpp
 
 HEADERS += \
     src/vrfrontend.h \
@@ -62,7 +65,10 @@ HEADERS += \
     src/chunk.h \
     src/blocktype.h \
     src/blockdef.h \
-    src/aab.h
+    src/aab.h \
+    src/particlefireball.h \
+    src/particleemitter.h \
+    src/fireball.h
 
 LIBS += -L/lib/x86_64-linux-gnu \
         -lGLU \
