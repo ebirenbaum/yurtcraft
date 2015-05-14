@@ -5,12 +5,12 @@ VRFrontend::VRFrontend(const string &mySetup, Application *app) : VRApp(), m_app
     m_app->setFrontend(this);
 
     // Initialize the VRApp
-    Log  *demoLog = new Log("demo-log.txt");
+    G3D::Log *demoLog = new G3D::Log("demo-log.txt");
     init(mySetup, demoLog);
 
     // Setup the mouse tracker, using pure mouse delta for the first person camera in dekstop mode.
     m_mouseToTracker = new MouseToTracker(getCamera(), 2);
-    _clearColor = Color3(0,0,0);
+    _clearColor = G3D::Color3(0,0,0);
 
     m_app->initGL();
 }
@@ -21,19 +21,19 @@ VRFrontend::~VRFrontend()
 }
 
 // Called by VRApp when render events happen - this calls draw(), where most rendering code should go
-void VRFrontend::doGraphics(RenderDevice *rd)
+void VRFrontend::doGraphics(G3D::RenderDevice *rd)
 {
     while(glGetError() != GL_NO_ERROR) {
     }
 
     // Use the tracker frames to draw the laser pointer
-    Array<string> trackerNames = m_trackerFrames.getKeys();
+    G3D::Array<string> trackerNames = m_trackerFrames.getKeys();
     for (int i=0;i<trackerNames.size();i++) {
-        CoordinateFrame trackerFrame = m_trackerFrames[trackerNames[i]];
+        G3D::CoordinateFrame trackerFrame = m_trackerFrames[trackerNames[i]];
 
         // Draw laser pointer
         if (trackerNames[i] == "Wand_Tracker") {
-            Vector3 lookVector = trackerFrame.lookVector();
+            G3D::Vector3 lookVector = trackerFrame.lookVector();
 
             glPushAttrib(GL_ENABLE_BIT | GL_LINE_BIT);
 
@@ -116,6 +116,12 @@ void VRFrontend::doGraphics(RenderDevice *rd)
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glDisable(GL_LIGHTING);
 
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(60, (float)this->getRenderDevice()->width() / (float)this->getRenderDevice()->height(),
+                   .01, 400);
+    glMatrixMode(GL_MODELVIEW);
+
     // After tons of setup, finally do our rendering
     m_app->draw();
 
@@ -123,15 +129,16 @@ void VRFrontend::doGraphics(RenderDevice *rd)
 }
 
 // Called by VRApp when user input happens
-void VRFrontend::doUserInput(Array<VRG3D::EventRef> &events)
+void VRFrontend::doUserInput(G3D::Array<VRG3D::EventRef> &events)
 {
-    m_app->mouseMoved(_userInput->mouseDXY());
+    G3D::Vector2 moved = _userInput->mouseDXY();
+    m_app->mouseMoved(Vector2(moved.x, moved.y));
 
     double joystick_x = 0.0;
     double joystick_y = 0.0;
 
     // Populate the list of new events
-    Array<VRG3D::EventRef> newEvents;
+    G3D::Array<VRG3D::EventRef> newEvents;
     m_mouseToTracker->doUserInput(events, newEvents);
     events.append(newEvents);
 
@@ -141,7 +148,7 @@ void VRFrontend::doUserInput(Array<VRG3D::EventRef> &events)
 
         // Save all the tracker events that come in so we can use them
         // in the doGraphics routine
-        if (endsWith(event, "_Tracker")) {
+        if (G3D::endsWith(event, "_Tracker")) {
             if (m_trackerFrames.containsKey(event)) {
                 m_trackerFrames[event] = events[i]->getCoordinateFrameData();
             } else {
@@ -156,14 +163,14 @@ void VRFrontend::doUserInput(Array<VRG3D::EventRef> &events)
 
         // Used for mouse move events?
         else if (event == "Mouse_Pointer") {
-            static Vector2 lastPos;
+            static G3D::Vector2 lastPos;
             if (events[i]->get2DData() != lastPos) {
                 lastPos = events[i]->get2DData();
             }
         }
 
         // Check for mouse events
-        else if (beginsWith(event, "Mouse")) {
+        else if (G3D::beginsWith(event, "Mouse")) {
             parseMouseEvent(event);
         }
 
@@ -244,15 +251,22 @@ void VRFrontend::parseKeyEvent(const string &event)
 
 void VRFrontend::parseMouseEvent(const string &event)
 {
-    if (endsWith(event, "Pointer")) return;
+    if (G3D::endsWith(event, "Pointer")) return;
     string withoutMouse = event.substr(6);
-    MouseEvent e;
-    e.button = beginsWith(withoutMouse, "Left") ? MOUSE_LEFT :
-                  (beginsWith(withoutMouse, "Right") ? MOUSE_RIGHT : MOUSE_MIDDLE);
 
-    if (endsWith(withoutMouse, "down")) {
-        m_app->mousePressed(e);
+    if (G3D::beginsWith(withoutMouse, "WheelUp")) {
+        m_app->mouseWheeled(1);
+    } else if (G3D::beginsWith(withoutMouse, "WheelDown")) {
+        m_app->mouseWheeled(-1);
+    }
+
+    MouseEvent e;
+    e.button = G3D::beginsWith(withoutMouse, "Left") ? MOUSE_LEFT :
+                  (G3D::beginsWith(withoutMouse, "Right") ? MOUSE_RIGHT : MOUSE_MIDDLE);
+
+    if (G3D::endsWith(withoutMouse, "down")) {
+        m_app->mousePressed(&e);
     } else {
-        m_app->mouseReleased(e);
+        m_app->mouseReleased(&e);
     }
 }

@@ -12,82 +12,88 @@ SampleApp::~SampleApp()
 void SampleApp::initGL()
 {
     this->setPureMouseDelta(true);
-    m_camera.translate(Vector3(0,2,0));
+
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+    glFrontFace(GL_CCW);
+
+    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
+    glEnable(GL_DEPTH_TEST);
+
+    m_graphics = new Graphics();
+
+    m_graphics->loadTexture("./res/img/terrain.png", "atlas");
+//    m_graphics->loadTexture("./res/img/entity/zombie.png"), "zombie");
+//    m_graphics->loadTexture("./res/img/entity/creeper.png"), "creeper");
+
+    m_graphics->loadTexture("./res/img/skybox/posy.png", "skyboxtop");
+    m_graphics->loadTexture("./res/img/skybox/negy.png", "skyboxbot");
+    m_graphics->loadTexture("./res/img/skybox/posz.png", "skyboxfront");
+    m_graphics->loadTexture("./res/img/skybox/negz.png", "skyboxback");
+    m_graphics->loadTexture("./res/img/skybox/negx.png", "skyboxleft");
+    m_graphics->loadTexture("./res/img/skybox/posx.png", "skyboxright");
+
+    for (int i = 0; i < 10; i++) {
+        m_graphics->loadTexture(appendNum("./res/img/breaking/", i).append(".png"),
+                               appendNum("break", i));
+    }
+
+//    // Basically, disable lighting for textures
+//    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+
+    // Set up global (ambient) lighting
+    GLfloat global_ambient[] = { .05f, .05f, .05f, .05f };
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, global_ambient);
+    glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 1);
+
+    // Set up GL_LIGHT0 with a position and lighting properties
+    glEnable(GL_COLOR_MATERIAL);
+    glEnable(GL_LIGHTING);
+
+    m_world = new McWorld(0, &m_camera);
 }
 
 void SampleApp::tick(float seconds)
 {
-    if (m_camera.getEye().y > 2) {
-        m_camera.translate(seconds * Vector3(0,-9.8,0));
-    }
-    updateCamera(seconds);
+    m_world->tick(seconds);
 }
 
 void SampleApp::draw()
 {
-    glColor3f(1,1,1);
-    glBegin(GL_QUADS);
-    glVertex3f(-10,0,10);
-    glVertex3f(10,0,10);
-    glVertex3f(10,0,-10);
-    glVertex3f(-10,0,-10);
-    glEnd();
+    m_world->draw(m_graphics);
 }
 
 void SampleApp::mouseMoved(const Vector2 &delta)
 {
-    m_camera.yaw(delta.x / 5);
-    m_camera.pitch(delta.y / 5);
+    m_world->mouseMoved(delta);
 }
 
-void SampleApp::mousePressed(const MouseEvent &e)
+void SampleApp::mousePressed(MouseEvent *e)
 {
-    cout << e.button << " pressed!" << endl;
+    m_world->mousePressed(e);
 }
 
-void SampleApp::mouseReleased(const MouseEvent &e)
+void SampleApp::mouseReleased(MouseEvent *e)
 {
-    cout << e.button << " released!" << endl;
+    m_world->mouseReleased(e);
+}
+
+void SampleApp::mouseWheeled(int delta)
+{
+    m_world->mouseWheeled(delta);
 }
 
 void SampleApp::keyPressed(const string &key)
 {
-    m_heldKeys.insert(key);
-
     // Exit on escape
     if (key == "ESC") {
         exit(0);
     }
 
-    if (key == "SPACE") {
-        m_camera.setEye(m_camera.getEye() + Vector3(0,10,0));
-    }
+    m_world->keyPressed(key);
 }
 
 void SampleApp::keyReleased(const string &key)
 {
-    m_heldKeys.erase(key);
-}
-
-// Basic math to set up the camera
-void SampleApp::updateCamera(float seconds) {
-    float speed = 10;
-    Vector3 look = m_camera.getHorizontalLookVector() * seconds * speed;
-    Vector3 perpendicular = m_camera.getRightVector() * seconds * speed;
-
-    if (isKeyHeld("A")) {
-        m_camera.translate(-perpendicular);
-    }
-
-    if (isKeyHeld("D")) {
-        m_camera.translate(perpendicular);
-    }
-
-    if (isKeyHeld("W")) {
-        m_camera.translate(look);
-    }
-
-    if (isKeyHeld("S")) {
-        m_camera.translate(-look);
-    }
+    m_world->keyReleased(key);
 }

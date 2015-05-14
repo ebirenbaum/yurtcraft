@@ -1,5 +1,5 @@
-#ifndef VRFrontend_H
-#define VRFrontend_H
+#ifndef VRFRONTEND_H
+#define VRFRONTEND_H
 
 #include <vrg3d/VRG3D.h>
 #include <GL/gl.h>
@@ -31,8 +31,10 @@ public:
         virtual void keyReleased(const string &key) = 0;
 
         virtual void mouseMoved(const Vector2 &delta) = 0;
-        virtual void mousePressed(const MouseEvent &e) = 0;
-        virtual void mouseReleased(const MouseEvent &e) = 0;
+        virtual void mousePressed(MouseEvent *e) = 0;
+        virtual void mouseReleased(MouseEvent *e) = 0;
+
+        virtual void mouseWheeled(int delta) = 0;
 
         VRCamera m_camera;
 
@@ -47,14 +49,14 @@ public:
     virtual ~VRFrontend();
 
     // VRG3D events, translated into custom events and passed to m_app
-    void doGraphics(RenderDevice *rd);
-    void doUserInput(Array<VRG3D::EventRef> &events);
+    void doGraphics(G3D::RenderDevice *rd);
+    void doUserInput(G3D::Array<VRG3D::EventRef> &events);
 
 protected:
 
     // VRG3D tracking and basic drawing information
-    Table<string, CoordinateFrame> m_trackerFrames;
-    GFontRef m_font;
+    G3D::Table<string, G3D::CoordinateFrame> m_trackerFrames;
+    G3D::GFontRef m_font;
     MouseToTrackerRef m_mouseToTracker;
 
 private:
@@ -71,4 +73,4 @@ private:
     Application *m_app;
 };
 
-#endif // VRFrontend_H
+#endif // VRFRONTEND_H

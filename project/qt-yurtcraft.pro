@@ -16,13 +16,53 @@ SOURCES += \
     src/vrfrontend.cpp \
     src/main.cpp \
     src/vrcamera.cpp \
-    src/sampleapp.cpp
+    src/sampleapp.cpp \
+    src/world.cpp \
+    src/voxelsystem.cpp \
+    src/triangle.cpp \
+    src/skybox.cpp \
+    src/player.cpp \
+    src/obj.cpp \
+    src/noise.cpp \
+    src/mcworld.cpp \
+    src/mcchunkfactory.cpp \
+    src/mcchunk.cpp \
+    src/graphics.cpp \
+    src/entity.cpp \
+    src/ellipsoid.cpp \
+    src/cylinder.cpp \
+    src/collisions.cpp \
+    src/chunkfactory.cpp \
+    src/chunk.cpp \
+    src/aab.cpp
 
 HEADERS += \
     src/vrfrontend.h \
     src/vrcamera.h \
     src/includes.h \
-    src/sampleapp.h
+    src/sampleapp.h \
+    src/world.h \
+    src/voxelsystem.h \
+    src/vector.h \
+    src/triangle.h \
+    src/skybox.h \
+    src/player.h \
+    src/obj.h \
+    src/noise.h \
+    src/mcworld.h \
+    src/mcchunkfactory.h \
+    src/mcchunk.h \
+    src/matrix.h \
+    src/graphics.h \
+    src/entity.h \
+    src/ellipsoid.h \
+    src/cylinder.h \
+    src/collisions.h \
+    src/chunkfactory.h \
+    src/chunk.h \
+    src/blocktype.h \
+    src/blockdef.h \
+    src/aab.h
 
 LIBS += -L/lib/x86_64-linux-gnu \
         -lGLU \
@@ -71,3 +111,10 @@ unix:!macx:!symbian: PRE_TARGETDEPS += $$(G)/install_linux/lib/libavcodec.a
 
 unix:!macx:!symbian: LIBS += -L$$(G)/install_linux/lib/ -lavformat
 unix:!macx:!symbian: PRE_TARGETDEPS += $$(G)/install_linux/lib/libavformat.a
+
+unix:!macx:!symbian: LIBS += -L$$PWD/lib/ -lSOIL
+
+INCLUDEPATH += $$PWD/lib/include
+DEPENDPATH += $$PWD/lib/include
+
+unix:!macx:!symbian: PRE_TARGETDEPS += $$PWD/lib/libSOIL.a

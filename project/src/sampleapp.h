@@ -6,6 +6,8 @@
 #include <iostream>
 
 #include "vrfrontend.h"
+#include "graphics.h"
+#include "mcworld.h"
 
 class SampleApp : public VRFrontend::Application
 {
@@ -21,13 +23,13 @@ public:
     void keyReleased(const string &key);
 
     void mouseMoved(const Vector2 &delta);
-    void mousePressed(const MouseEvent &e);
-    void mouseReleased(const MouseEvent &e);
+    void mousePressed(MouseEvent *e);
+    void mouseReleased(MouseEvent *e);
+    void mouseWheeled(int delta);
 
 private:
-    void updateCamera(float seconds);
-    set<string> m_heldKeys;
-    inline bool isKeyHeld(const string &key) { return m_heldKeys.find(key) != m_heldKeys.end(); }
+    Graphics *m_graphics;
+    McWorld *m_world;
 };
 
 #endif // SAMPLEAPP_H
