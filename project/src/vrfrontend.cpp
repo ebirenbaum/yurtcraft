@@ -3,6 +3,8 @@
 VRFrontend::VRFrontend(const string &mySetup, Application *app) : VRApp(), m_app(app)
 {
     m_app->setFrontend(this);
+	
+	cout << endl << "Setup string is \"" << mySetup << "\"" <<  endl;
 
     // Initialize the VRApp
     G3D::Log *demoLog = new G3D::Log("demo-log.txt");
@@ -116,12 +118,12 @@ void VRFrontend::doGraphics(G3D::RenderDevice *rd)
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glDisable(GL_LIGHTING);
 
-    glMatrixMode(GL_PROJECTION);
+   /* glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     gluPerspective(60, (float)this->getRenderDevice()->width() / (float)this->getRenderDevice()->height(),
                    .01, 400);
     glMatrixMode(GL_MODELVIEW);
-
+*/
     // After tons of setup, finally do our rendering
     m_app->draw();
 

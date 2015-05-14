@@ -22,11 +22,11 @@ void SampleApp::initGL()
 
     m_graphics = new Graphics();
 
-    m_graphics->loadTexture("./res/img/terrain.png", "atlas");
+    m_graphics->loadTexture("./res/img/terrain.jpg", "atlas");
 //    m_graphics->loadTexture("./res/img/entity/zombie.png"), "zombie");
 //    m_graphics->loadTexture("./res/img/entity/creeper.png"), "creeper");
 
-    m_graphics->loadTexture("./res/img/skybox/posy.png", "skyboxtop");
+/*    m_graphics->loadTexture("./res/img/skybox/posy.png", "skyboxtop");
     m_graphics->loadTexture("./res/img/skybox/negy.png", "skyboxbot");
     m_graphics->loadTexture("./res/img/skybox/posz.png", "skyboxfront");
     m_graphics->loadTexture("./res/img/skybox/negz.png", "skyboxback");
@@ -38,7 +38,7 @@ void SampleApp::initGL()
     for (int i = 0; i < 10; i++) {
         m_graphics->loadTexture(appendNum("./res/img/breaking/", i).append(".png"),
                                appendNum("break", i));
-    }
+    }*/
 
 //    // Basically, disable lighting for textures
 //    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);

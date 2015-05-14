@@ -6,6 +6,11 @@ int main( int argc, char **argv) {
     std::string setupStr;
     VRFrontend *app;
 
+if (argc >= 2)
+  {  setupStr = std::string(argv[1]);
+  }
+
+
     // This opens up the graphics window, and starts connections to input devices, but doesn't actually start rendering yet.
     app = new VRFrontend(setupStr, new SampleApp());
 
