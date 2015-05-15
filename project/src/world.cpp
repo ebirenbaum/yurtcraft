@@ -1,6 +1,6 @@
 #include "world.h"
 
-World::World(VRCamera *camera) : m_camera(camera), m_gravity(Vector3()) {
+World::World(VrCamera *camera) : m_camera(camera), m_gravity(Vector3()) {
 }
 
 World::~World() {

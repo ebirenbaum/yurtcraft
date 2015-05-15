@@ -15,7 +15,7 @@
 class Player : public Entity {
 
 public:
-    Player(const Vector3 &pos, VoxelSystem *system, VRCamera *cam);
+    Player(const Vector3 &pos, VoxelSystem *system, VrCamera *cam);
     virtual ~Player();
 
     void tick(float seconds);
@@ -45,7 +45,7 @@ public:
 
 protected:
 
-    VRCamera *m_camera;
+    VrCamera *m_camera;
     set<string> m_heldKeys;
 
     bool m_canJump;

@@ -1,10 +1,8 @@
 #include "vrfrontend.h"
 
-VRFrontend::VRFrontend(const string &mySetup, Application *app) : VRApp(), m_app(app)
+VrFrontend::VrFrontend(const string &mySetup, Application *app) : VRApp(), m_app(app), m_data(&m_trackerFrames)
 {
-    m_app->setFrontend(this);
-	
-	cout << endl << "Setup string is \"" << mySetup << "\"" <<  endl;
+    m_app->setFrontend(this, &m_data);
 
     // Initialize the VRApp
     G3D::Log *demoLog = new G3D::Log("demo-log.txt");
@@ -13,22 +11,16 @@ VRFrontend::VRFrontend(const string &mySetup, Application *app) : VRApp(), m_app
     // Setup the mouse tracker, using pure mouse delta for the first person camera in dekstop mode.
     m_mouseToTracker = new MouseToTracker(getCamera(), 2);
     _clearColor = G3D::Color3(0,0,0);
-
     m_app->initGL();
-
-    VRG3D::ProjectionVRCameraRef camera = this->getCamera();
-    VRG3D::DisplayTile tile = camera->getTile();
-    tile.farClip = 400;
-    camera->setDisplayTile(tile);
 }
 
-VRFrontend::~VRFrontend()
+VrFrontend::~VrFrontend()
 {
     delete m_app;
 }
 
 // Called by VRApp when render events happen - this calls draw(), where most rendering code should go
-void VRFrontend::doGraphics(G3D::RenderDevice *rd)
+void VrFrontend::doGraphics(G3D::RenderDevice *rd)
 {
     while(glGetError() != GL_NO_ERROR) {
     }
@@ -123,12 +115,6 @@ void VRFrontend::doGraphics(G3D::RenderDevice *rd)
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glDisable(GL_LIGHTING);
 
-//    glMatrixMode(GL_PROJECTION);
-//    glLoadIdentity();
-//    gluPerspective(60, (float)this->getRenderDevice()->width() / (float)this->getRenderDevice()->height(),
-//                   .01, 400);
-//    glMatrixMode(GL_MODELVIEW);
-
     // After tons of setup, finally do our rendering
     m_app->draw();
 
@@ -136,7 +122,7 @@ void VRFrontend::doGraphics(G3D::RenderDevice *rd)
 }
 
 // Called by VRApp when user input happens
-void VRFrontend::doUserInput(G3D::Array<VRG3D::EventRef> &events)
+void VrFrontend::doUserInput(G3D::Array<VRG3D::EventRef> &events)
 {
     G3D::Vector2 moved = _userInput->mouseDXY();
     m_app->mouseMoved(Vector2(moved.x, moved.y));
@@ -183,13 +169,13 @@ void VRFrontend::doUserInput(G3D::Array<VRG3D::EventRef> &events)
 
         else if (event == "Wand_Joystick_X") {
             joystick_x = events[i]->get1DData();
-cout << "X value: " << joystick_x << endl;
+            m_data.m_joystick.x = joystick_x;
         }
 
         else if (event == "Wand_Joystick_Y") {
             joystick_y = events[i]->get1DData();
-cout << "Y value: " << joystick_y << endl;        
-}
+            m_data.m_joystick.x = joystick_y;
+        }
 
         else if (event == "SpaceNav_Trans") {
             cout << "Keyboard event 2: " << event<< events[i]->get3DData() << endl;
@@ -203,16 +189,16 @@ cout << "Y value: " << joystick_y << endl;
             continue;
         }
 
-	else if (event == "VRPNButtonDevice_Unknown_Event_down") {
-m_app->keyPressed("SPACE");
-}
+        else if (event == "VRPNButtonDevice_Unknown_Event_down") {
+            m_app->keyPressed("SPACE");
+        }
 
 
         else {
             // This will print out the names of all events, but can be too
             // much if you are getting several tracker updates per frame.
             // Uncomment this to see everything..
-             cout << event << endl;
+            cout << event << endl;
         }
 
 //        // Rotate the camera using the wand
@@ -229,21 +215,9 @@ m_app->keyPressed("SPACE");
 //            m_camera.translation -= .05f*joystick_y*m_trackerFrames[string("Wand_Tracker")].lookVector();
 //        }
     }
-
-    if (joystick_y > 0) {
-m_app->keyReleased("W");
-    }
- if (joystick_y < 0) {
-m_app->keyReleased("S");
-m_app->keyPressed("W");
 }
 
-if (joystick_x != 0) {
-m_app->mouseMoved(Vector2(joystick_x * 20, 0));
-}
-}
-
-void VRFrontend::doTick()
+void VrFrontend::doTick()
 {
     // Get the elapsed time since the last tick
     long now = glutGet(GLUT_ELAPSED_TIME);
@@ -258,10 +232,10 @@ void VRFrontend::doTick()
 
     // Update previous time for the next tick.
     m_prevTime = now;
-    m_app->tick(.025);
+    m_app->tick(.017);
 }
 
-void VRFrontend::parseKeyEvent(const string &event)
+void VrFrontend::parseKeyEvent(const string &event)
 {
     string withoutKBD = event.substr(4);
     int index = withoutKBD.find("_");
@@ -275,7 +249,7 @@ void VRFrontend::parseKeyEvent(const string &event)
     }
 }
 
-void VRFrontend::parseMouseEvent(const string &event)
+void VrFrontend::parseMouseEvent(const string &event)
 {
     if (G3D::endsWith(event, "Pointer")) return;
     string withoutMouse = event.substr(6);
@@ -288,7 +262,7 @@ void VRFrontend::parseMouseEvent(const string &event)
 
     MouseEvent e;
     e.button = G3D::beginsWith(withoutMouse, "Left") ? MOUSE_LEFT :
-                  (G3D::beginsWith(withoutMouse, "Right") ? MOUSE_RIGHT : MOUSE_MIDDLE);
+                                                       (G3D::beginsWith(withoutMouse, "Right") ? MOUSE_RIGHT : MOUSE_MIDDLE);
 
     if (G3D::endsWith(withoutMouse, "down")) {
         m_app->mousePressed(&e);

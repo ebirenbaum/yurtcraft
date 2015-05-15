@@ -13,7 +13,7 @@
 class McWorld : public World {
 
 public:
-    McWorld(int seed, VRCamera *cam);
+    McWorld(int seed, VrCamera *cam, VrData *data);
     virtual ~McWorld();
 
     void tick(float seconds);
@@ -24,13 +24,15 @@ public:
 
     bool isGameOver() { return m_player->m_life < 0; }
 
+    void keyPressed(const string &key);
+    void keyReleased(const string &key);
+
     void mousePressed(MouseEvent *event);
     void mouseReleased(MouseEvent *event);
     void mouseMoved(const Vector2 &delta);
     void mouseWheeled(int delta);
 
-    void keyPressed(const string &key);
-    void keyReleased(const string &key);
+    void joystickPressed();
 
     void resize(float aspectRatio);
 
@@ -43,10 +45,10 @@ private:
     VoxelSystem *m_system;
     VoxelIntersection m_selected;
 
-    float m_time;
+    VrData *m_data;
 
+    float m_time, m_timeRemove;
     bool m_removeHeld;
-    float m_timeRemove;
 };
 
 #endif // MINECRAFTWORLD_H

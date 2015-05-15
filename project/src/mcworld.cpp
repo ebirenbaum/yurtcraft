@@ -1,7 +1,8 @@
 #include "mcworld.h"
 #include "fireball.h"
 
-McWorld::McWorld(int seed, VRCamera *cam) : World(cam), m_time(0), m_removeHeld(false), m_timeRemove(0) {
+McWorld::McWorld(int seed, VrCamera *cam, VrData *data)
+    : World(cam), m_data(data), m_time(0), m_removeHeld(false), m_timeRemove(0) {
     m_system = new VoxelSystem(/*"atlas"*/);
     m_system->setChunkFactory(new McChunkFactory(seed));
 
@@ -133,6 +134,14 @@ void McWorld::adjustLighting() {
     }
 }
 
+void McWorld::keyPressed(const string &key) {
+    m_player->keyPressed(key);
+}
+
+void McWorld::keyReleased(const string &key) {
+    m_player->keyReleased(key);
+}
+
 void McWorld::mousePressed(MouseEvent *event) {
     m_player->mousePressed(event);
 
@@ -160,12 +169,8 @@ void McWorld::mouseWheeled(int delta) {
     m_player->mouseWheeled(delta);
 }
 
-void McWorld::keyPressed(const string &key) {
-    m_player->keyPressed(key);
-}
-
-void McWorld::keyReleased(const string &key) {
-    m_player->keyReleased(key);
+void McWorld::joystickPressed() {
+    m_player->mousePressed("SPACE");
 }
 
 Vector3 McWorld::getPlayerPosition() {

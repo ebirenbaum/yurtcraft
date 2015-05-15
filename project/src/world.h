@@ -13,20 +13,22 @@
 class World {
 
 public:
-    World(VRCamera *camera);
+    World(VrCamera *camera);
     virtual ~World();
 
     virtual void tick(float seconds);
     virtual void draw(Graphics *g);
     virtual void drawHUD(Graphics *g, const Vector2 &dim) = 0;
 
+    virtual void keyPressed(const string &key) = 0;
+    virtual void keyReleased(const string &key) = 0;
+
     virtual void mousePressed(MouseEvent *event) = 0;
     virtual void mouseReleased(MouseEvent *event) = 0;
     virtual void mouseMoved(const Vector2 &delta) = 0;
     virtual void mouseWheeled(int delta) = 0;
 
-    virtual void keyPressed(const string &key) = 0;
-    virtual void keyReleased(const string &key) = 0;
+    virtual void joystickPressed() = 0;
 
     virtual void resize(float aspectRatio) = 0;
 
@@ -34,7 +36,7 @@ public:
 
 protected:
     vector<Entity *> m_entities;
-    VRCamera *m_camera;
+    VrCamera *m_camera;
 
 private:
     Vector3 m_gravity;

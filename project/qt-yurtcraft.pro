@@ -37,7 +37,8 @@ SOURCES += \
     src/aab.cpp \
     src/particlefireball.cpp \
     src/particleemitter.cpp \
-    src/fireball.cpp
+    src/fireball.cpp \
+    src/vrdata.cpp
 
 HEADERS += \
     src/vrfrontend.h \
@@ -68,7 +69,8 @@ HEADERS += \
     src/aab.h \
     src/particlefireball.h \
     src/particleemitter.h \
-    src/fireball.h
+    src/fireball.h \
+    src/vrdata.h
 
 LIBS += -L/lib/x86_64-linux-gnu \
         -lGLU \
