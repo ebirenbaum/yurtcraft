@@ -2,7 +2,7 @@
 
 VRCamera::VRCamera()
 {
-    m_yaw = 0.f;
+    m_yaw = 90.f;
     m_pitch = 0.f;
 }
 

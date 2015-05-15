@@ -15,6 +15,11 @@ VRFrontend::VRFrontend(const string &mySetup, Application *app) : VRApp(), m_app
     _clearColor = G3D::Color3(0,0,0);
 
     m_app->initGL();
+
+    VRG3D::ProjectionVRCameraRef camera = this->getCamera();
+    VRG3D::DisplayTile tile = camera->getTile();
+    tile.farClip = 400;
+    camera->setDisplayTile(tile);
 }
 
 VRFrontend::~VRFrontend()
@@ -118,12 +123,12 @@ void VRFrontend::doGraphics(G3D::RenderDevice *rd)
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glDisable(GL_LIGHTING);
 
-   /* glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluPerspective(60, (float)this->getRenderDevice()->width() / (float)this->getRenderDevice()->height(),
-                   .01, 400);
-    glMatrixMode(GL_MODELVIEW);
-*/
+//    glMatrixMode(GL_PROJECTION);
+//    glLoadIdentity();
+//    gluPerspective(60, (float)this->getRenderDevice()->width() / (float)this->getRenderDevice()->height(),
+//                   .01, 400);
+//    glMatrixMode(GL_MODELVIEW);
+
     // After tons of setup, finally do our rendering
     m_app->draw();
 
@@ -178,11 +183,13 @@ void VRFrontend::doUserInput(G3D::Array<VRG3D::EventRef> &events)
 
         else if (event == "Wand_Joystick_X") {
             joystick_x = events[i]->get1DData();
+cout << "X value: " << joystick_x << endl;
         }
 
         else if (event == "Wand_Joystick_Y") {
             joystick_y = events[i]->get1DData();
-        }
+cout << "Y value: " << joystick_y << endl;        
+}
 
         else if (event == "SpaceNav_Trans") {
             cout << "Keyboard event 2: " << event<< events[i]->get3DData() << endl;
@@ -195,6 +202,11 @@ void VRFrontend::doUserInput(G3D::Array<VRG3D::EventRef> &events)
         else if (event == "SynchedTime") {
             continue;
         }
+
+	else if (event == "VRPNButtonDevice_Unknown_Event_down") {
+m_app->keyPressed("SPACE");
+}
+
 
         else {
             // This will print out the names of all events, but can be too
@@ -217,6 +229,18 @@ void VRFrontend::doUserInput(G3D::Array<VRG3D::EventRef> &events)
 //            m_camera.translation -= .05f*joystick_y*m_trackerFrames[string("Wand_Tracker")].lookVector();
 //        }
     }
+
+    if (joystick_y > 0) {
+m_app->keyReleased("W");
+    }
+ if (joystick_y < 0) {
+m_app->keyReleased("S");
+m_app->keyPressed("W");
+}
+
+if (joystick_x != 0) {
+m_app->mouseMoved(Vector2(joystick_x * 20, 0));
+}
 }
 
 void VRFrontend::doTick()
@@ -234,7 +258,7 @@ void VRFrontend::doTick()
 
     // Update previous time for the next tick.
     m_prevTime = now;
-    m_app->tick(dt);
+    m_app->tick(.025);
 }
 
 void VRFrontend::parseKeyEvent(const string &event)

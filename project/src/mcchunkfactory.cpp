@@ -78,7 +78,7 @@ McChunkFactory::McChunkFactory(int seed) : ChunkFactory(), m_noise(new Noise(see
 
     m_terrain = true;
     m_trees = true;
-    m_caves = true;
+    m_caves = false;
 
     m_excludeCaves.insert(AIR);
     m_excludeCaves.insert(SAND);
