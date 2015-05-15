@@ -170,7 +170,7 @@ void McWorld::mouseWheeled(int delta) {
 }
 
 void McWorld::joystickPressed() {
-    m_player->mousePressed("SPACE");
+    m_player->keyPressed("SPACE");
 }
 
 Vector3 McWorld::getPlayerPosition() {

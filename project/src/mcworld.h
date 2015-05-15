@@ -9,6 +9,7 @@
 #include "mcchunkfactory.h"
 #include "player.h"
 #include "voxelsystem.h"
+#include "vrdata.h"
 
 class McWorld : public World {
 
