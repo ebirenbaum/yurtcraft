@@ -46,7 +46,7 @@ INCLUDE_DIRS += -I./lib/include
 
 LIB_DIRS = $(EXTRA_LIBS)
 LIB_DIRS += -L./lib
-
+LIB_DIRS += -L/usr/lib/x86_64-linux-gnu
 
 LIBS = -Xlinker --start-group  -Xlinker -ldl  -Xlinker -lX11 -Xlinker \
 	-lXext  -Xlinker -lpthread  -Xlinker -lz  -Xlinker -ljpeg  -Xlinker \
@@ -55,6 +55,14 @@ LIBS = -Xlinker --start-group  -Xlinker -ldl  -Xlinker -lX11 -Xlinker \
 	-Xlinker -lG3D -Xlinker -lGLU -Xlinker -lGL -Xlinker -lvrpn \
 	-Xlinker -lglut -Xlinker -lXmu $(SCALABLE_LIB) \
 	-Xlinker --end-group
+
+# No Xlinker versions of libs
+LIBS += -ldl -lX11  \
+	-lXext -lpthread -lz -ljpeg   \
+	-lpng -lzip -lSDL -lvrg3d   \
+	-lavutil -lavformat -lavcodec -lGLG3D \
+	 -lG3D -lGLU -lGL -lvrpn \
+	 -lglut -lXmu $(SCALABLE_LIB)
 
 all: yurtcraft
 
