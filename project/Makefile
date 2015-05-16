@@ -1,5 +1,5 @@
 CPP = g++
-CPPFLAGS = -Wall -g
+CPPFLAGS = -Wall -g -std=c++0x
 LDFLAGS = 
 
 TARGET = yurtcraft
