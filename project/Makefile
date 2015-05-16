@@ -41,7 +41,7 @@ LIBS += -Xlinker --start-group -Xlinker -ldl  -Xlinker -lX11 -Xlinker \
 
 all: yurtcraft
 
-yurtcraft:  obj/vrfrontend.o obj/main.o obj/vrcamera.o obj/sampleapp.o obj/aab.o obj/chunk.o obj/chunkfactory.o obj/collisions.o obj/cylinder.o obj/ellipsoid.o obj/entity.o obj/graphics.o obj/mcchunk.o obj/mcchunkfactory.o obj/mcworld.o obj/noise.o obj/obj.o obj/player.o obj/skybox.o obj/triangle.o obj/voxelsystem.o obj/world.o
+yurtcraft:  obj/vrfrontend.o obj/main.o obj/vrcamera.o obj/sampleapp.o obj/aab.o obj/chunk.o obj/chunkfactory.o obj/collisions.o obj/cylinder.o obj/ellipsoid.o obj/entity.o obj/graphics.o obj/mcchunk.o obj/mcchunkfactory.o obj/mcworld.o obj/noise.o obj/obj.o obj/player.o obj/skybox.o obj/triangle.o obj/voxelsystem.o obj/world.o obj/biomemanager.o obj/biometile.o obj/terrainfeature.o obj/biome.o obj/mountainbiome.o
 	$(CPP) $(LDFLAGS) -o yurtcraft $^ $(LIB_DIRS) $(LIBS)
 
 

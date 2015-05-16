@@ -8,6 +8,9 @@
 #include "noise.h"
 #include "blocktype.h"
 
+class BiomeManager;
+class BiomeTile;
+
 class McChunkFactory : public ChunkFactory {
 public:
     McChunkFactory(int seed = 0);
@@ -31,6 +34,9 @@ private:
 
     bool m_terrain, m_trees, m_caves;
     set<BlockType> m_excludeCaves, m_replaceWithOres;
+
+    BiomeManager *bm;
+    map<pair<float, float>, BiomeTile*> biomeTiles;
 };
 
 #endif // MCCHUNKFACTORY_H

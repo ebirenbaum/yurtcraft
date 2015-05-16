@@ -34,6 +34,11 @@ SOURCES += \
     src/collisions.cpp \
     src/chunkfactory.cpp \
     src/chunk.cpp \
+    src/biomemanager.cpp \
+    src/biometile.cpp \
+    src/terrainfeature.cpp \
+    src/biome.cpp \
+    src/mountainbiome.cpp \
     src/aab.cpp
 
 HEADERS += \
@@ -62,6 +67,11 @@ HEADERS += \
     src/chunk.h \
     src/blocktype.h \
     src/blockdef.h \
+    src/biomemanager.h \
+    src/biometile.h \
+    src/biome.h \
+    src/mountainbiome.h \
+    src/terrainfeature.h \
     src/aab.h
 
 LIBS += -L/lib/x86_64-linux-gnu \
