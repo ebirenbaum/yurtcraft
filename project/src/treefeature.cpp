@@ -15,7 +15,7 @@ TreeFeature* TreeFeature::clone(Vector3 _pos, BiomeGenInfo *_baseInfo){
     _tree->size.y += (int)(2*sin(_baseInfo->humidity) + 1);
     
     if (_tree->baseInfo->primaryBiome == "jungle"){
-        _tree->size *= (int)(.3*sin(_baseInfo->temperature)+1.2);
+        _tree->size *= (int)(.3*sin(_baseInfo->temperature)+1.4);
     }
         
     return _tree;
