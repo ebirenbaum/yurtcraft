@@ -34,7 +34,7 @@ McChunkFactory::McChunkFactory(int seed) : ChunkFactory(), m_noise(new Noise(see
 
     // leaves
     registerBlockDefinition(BlockDef(Block(LEAVES, true, false),
-                                    Vector4(.25, 1 - .75, .3125, 1 - .8125)));
+                                     Vector4(.25, 1 - .75, .3125, 1 - .8125)));
 
     registerBlockDefinition(BlockDef(Block(PLANK, false, false),
                                      Vector4(.25, 1 - .9375, .3125, 1 - 1)));
@@ -42,11 +42,11 @@ McChunkFactory::McChunkFactory(int seed) : ChunkFactory(), m_noise(new Noise(see
     registerBlockDefinition(BlockDef(Block(BRICK, false, false),
                                      Vector4(.4375, 1 - .9375, .5, 1 - 1)));
 
-//    // cactus
-//    registerBlockDefinition(BlockDef(Block(CACTUS, true, false),
-//                                     Vector4(.3125, .6875, .375, .75),
-//                                     Vector4(.4375, .6875, .5, .75),
-//                                     Vector4(.375, .6875, .4375, .75)));
+    //    // cactus
+    //    registerBlockDefinition(BlockDef(Block(CACTUS, true, false),
+    //                                     Vector4(.3125, .6875, .375, .75),
+    //                                     Vector4(.4375, .6875, .5, .75),
+    //                                     Vector4(.375, .6875, .4375, .75)));
 
     // sand
     registerBlockDefinition(BlockDef(Block(SAND, false, false),
@@ -82,7 +82,7 @@ McChunkFactory::McChunkFactory(int seed) : ChunkFactory(), m_noise(new Noise(see
 
     m_terrain = true;
     m_trees = true;
-    m_caves = true;
+    m_caves = false;
 
     m_excludeCaves.insert(AIR);
     m_excludeCaves.insert(SAND);
@@ -98,44 +98,44 @@ McChunkFactory::~McChunkFactory() {
     delete m_noise;
 }
 
+BiomeGenInfo* McChunkFactory::getBiomeInfo(const Vector3 &pos){
+    Vector2 _biomeTileAddress = (Vector2(pos.x, pos.z)/ BiomeTile::tileSize).floor();
+
+    if (biomeTiles.find(_biomeTileAddress.toPair()) == biomeTiles.end()){ // does not contain
+        cout << "getting a biome tile the hacky way" << endl;
+        Vector3 _chunkAddress = (pos / CHUNKX).floor();
+        getChunk(_chunkAddress);
+    }
+
+    return biomeTiles.at(_biomeTileAddress.toPair())->getInfo(Vector2(pos.x, pos.z));
+}
+
 Chunk *McChunkFactory::createChunk(const Vector3 &pos) {
     McChunk *chunk = new McChunk(this, pos);
     //    if (pos.y >= -1) initSurface(pos, chunk);
     //    else initUnderground(pos, chunk);
 
-    cout << 1 << endl;
+    //    cout << "creating chunk " << pos << endl;
 
     Vector2 _biomeTileAddress = (Vector2(pos.x, pos.z) * CHUNKX / BiomeTile::tileSize).floor();
 
-    cout << 1.1 << endl;
-
     if (biomeTiles.find(_biomeTileAddress.toPair()) == biomeTiles.end()){
-        cout << 1.2 << endl;
         BiomeTile *_bt = new BiomeTile(bm, _biomeTileAddress);
-        cout << 1.3 << endl;
         if (biomeTiles.find(_biomeTileAddress.toPair()) == biomeTiles.end()){
-            cout << 1.4 << endl;
             biomeTiles[_biomeTileAddress.toPair()] = _bt;
-            cout << 1.5 << endl;
         } else {
             cerr << "oops... another thread built biome tile "<<_bt->address<< " while this one was working" << endl;
         }
-        cout << 1.6 << endl;
     }
 
-    cout << 1.7 << endl;
     Vector3 absoluteChunkPosition = pos * CHUNKX;
     BiomeGenInfo *_biomeInfo = NULL;
-    cout << 1.8 << endl;
     BiomeTile *_bt = biomeTiles.at(_biomeTileAddress.toPair());
 
-    cout << 2 << endl;
 
     // i for 'inner' (can be used to directly index chunk's block and biome arrays)
     for (int _ix = 0; _ix < CHUNKX; _ix++){
-        cout << 3 << endl;
         for (int _iz = 0; _iz < CHUNKZ; _iz++){
-            cout << 4 << endl;
             double _x = absoluteChunkPosition.x + _ix;
             double _z = absoluteChunkPosition.z + _iz;
             Vector2 _index = Vector2(_x, _z);
@@ -147,7 +147,6 @@ Chunk *McChunkFactory::createChunk(const Vector3 &pos) {
             bool _setByFeature;
 
             for (int _iy = 0; _iy < CHUNKY; _iy++){
-                cout << 5 << endl;
                 _setByFeature = false;
 
                 double _y = absoluteChunkPosition.y + _iy;
@@ -156,15 +155,18 @@ Chunk *McChunkFactory::createChunk(const Vector3 &pos) {
                 TerrainFeature *_feature = _bt->getFeature(_index);
                 if (_feature != NULL){
                     unsigned char _featureBlock = _feature->generateBlock(Vector3(_x, _y, _z), _biomeInfo);
-                    if (_featureBlock != -1){
+                    if (_featureBlock != 251){
                         _blockType = _featureBlock;
                         _setByFeature = true;
                     }
                 }
-cout << 6 << endl;
                 if (!_setByFeature){
-                    if (_y == 0 && _biomeInfo->height < 0){
-                        _blockType = WATER;//bm->biomes.at("ocean")->generateBlock(Vector3(_x, _y, _z), *_biomeInfo, true);
+                    if (_y <= 27){ // magic number for water height
+                        if (_y >_biomeInfo->height){
+                            _blockType = WATER;//bm->biomes.at("ocean")->generateBlock(Vector3(_x, _y, _z), *_biomeInfo, true);
+                        } else {
+                            _blockType = SAND;
+                        }
                     } else {
                         if (bm->biomes.find(_biomeInfo->secondaryBiome) != bm->biomes.end()){
                             _secondaryBlockType = bm->biomes.at(_biomeInfo->secondaryBiome)->generateBlock(Vector3(_x, _y, _z), *_biomeInfo, false);
@@ -182,16 +184,14 @@ cout << 6 << endl;
                         }
                     }
                 }
-                cout << 7 << endl;
 
                 chunk->setBlock(Vector3(_ix, _iy, _iz), m_blockDefs[_blockType]);
 
-                cout << 8 << endl;
             }
         }
     }
 
-    cout << 10 << endl;
+    //    cout << "end create chunk" << endl;
 
     return chunk;
 }
@@ -338,9 +338,9 @@ void McChunkFactory::initTunnel(const Vector3 &start, const Vector3 &end, float 
                     Vector3 choice = p;
                     int oldY = choice.y;
 
-//                    float tempY = (choice.y - min.y) / (max.y - min.y);
-//                    int newY = floor(tempY * tempY * (max.y - min.y) + min.y);
-//                    choice.y = oldY;
+                    //                    float tempY = (choice.y - min.y) / (max.y - min.y);
+                    //                    int newY = floor(tempY * tempY * (max.y - min.y) + min.y);
+                    //                    choice.y = oldY;
 
                     Block bl = chunk->getBlock(choice);
                     if (m_excludeCaves.find((BlockType) bl.type) == m_excludeCaves.end()) {

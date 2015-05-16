@@ -1,11 +1,11 @@
 #include "player.h"
 
-Player::Player(const Vector3 &pos, VoxelSystem *system, VRCamera *cam)
+Player::Player(const Vector3 &pos, VoxelSystem *system, VrCamera *cam)
     : Entity(pos, Vector3(WIDTH, HEIGHT, WIDTH)), m_voxels(system), m_camera(cam) {
     m_canJump = false;
-
     m_block = GRASS;
-    m_speed = 8;
+    m_speed = 12;
+    m_life = 1;
 }
 
 Player::~Player() {

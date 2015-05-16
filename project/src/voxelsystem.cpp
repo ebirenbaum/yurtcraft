@@ -1,5 +1,7 @@
 #include "voxelsystem.h"
 
+#include "entity.h"
+
 VoxelSystem::VoxelSystem(/*const string &atlas*/) : /*m_atlas(atlas), */m_factory(NULL) {
     int n = 2;
     m_xb = Vector2(-n,n);
@@ -14,9 +16,14 @@ VoxelSystem::~VoxelSystem() {
 void VoxelSystem::draw(Graphics *g) {
     glColor3f(1,1,1);
     g->setupTexture("atlas");
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
     glEnableClientState(GL_NORMAL_ARRAY);
+
+
 
     for (map<pair<int, pair<int, int> >, Chunk *>::iterator it = m_chunks.begin(); it != m_chunks.end(); it++) {
         Chunk *chunk = it->second;
@@ -46,7 +53,9 @@ void VoxelSystem::draw(Graphics *g) {
 
 void VoxelSystem::collide(float seconds, vector<Entity *> *entities) {
     for (int i = 0; i < entities->size(); i++) {
-        collideEntity(seconds, entities->at(i));
+        if (entities->at(i)->m_collidesTerrain){
+            collideEntity(seconds, entities->at(i));
+        }
     }
 }
 

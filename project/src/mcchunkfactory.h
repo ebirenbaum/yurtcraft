@@ -10,6 +10,7 @@
 
 class BiomeManager;
 class BiomeTile;
+class BiomeGenInfo;
 
 class McChunkFactory : public ChunkFactory {
 public:
@@ -17,6 +18,8 @@ public:
     virtual ~McChunkFactory();
 
     Chunk *createChunk(const Vector3 &pos);
+
+    BiomeGenInfo* getBiomeInfo(const Vector3 &pos);
 
 private:
     void initSurface(const Vector3 &chunkPos, Chunk *chunk);

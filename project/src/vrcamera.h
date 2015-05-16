@@ -4,11 +4,11 @@
 #include <G3D/CoordinateFrame.h>
 #include "includes.h"
 
-class VRCamera
+class VrCamera
 {
 public:
-    VRCamera();
-    virtual ~VRCamera();
+    VrCamera();
+    virtual ~VrCamera();
 
     G3D::CoordinateFrame getCoordinateFrame() const;
 

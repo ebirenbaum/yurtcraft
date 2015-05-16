@@ -8,6 +8,7 @@ Skybox::~Skybox() {
 
 void Skybox::draw(Graphics *g) {
 
+    glColor3f(1,1,1);
     float scale = 150;
     glNormal3f(0,-1,0);
 

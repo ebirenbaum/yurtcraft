@@ -9,7 +9,7 @@
 #include "graphics.h"
 #include "mcworld.h"
 
-class SampleApp : public VRFrontend::Application
+class SampleApp : public VrFrontend::Application
 {
 public:
     SampleApp();
@@ -26,6 +26,8 @@ public:
     void mousePressed(MouseEvent *e);
     void mouseReleased(MouseEvent *e);
     void mouseWheeled(int delta);
+
+    void joystickPressed();
 
 private:
     Graphics *m_graphics;

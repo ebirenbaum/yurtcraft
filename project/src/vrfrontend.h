@@ -10,13 +10,13 @@
 #include <cmath>
 
 #include "vrcamera.h"
-
-using namespace std;
+#include "vrdata.h"
 
 // A wrapper for VRApp providing a cleaner interface (Application) for code to be built on
-class VRFrontend : public VRApp {
+class VrFrontend : public VRApp {
 
 public:
+
     class Application
     {
     public:
@@ -33,20 +33,32 @@ public:
         virtual void mouseMoved(const Vector2 &delta) = 0;
         virtual void mousePressed(MouseEvent *e) = 0;
         virtual void mouseReleased(MouseEvent *e) = 0;
-
         virtual void mouseWheeled(int delta) = 0;
 
-        VRCamera m_camera;
+        virtual void joystickPressed() = 0;
 
-        inline void setFrontend(VRFrontend *front) { m_frontend = front; }
+        VrCamera m_camera;
+
+        inline void setFrontend(VrFrontend *front, VrData *data) { m_frontend = front; m_data = data; }
         inline void setPureMouseDelta(bool val) { m_frontend->_userInput->setPureDeltaMouse(val); }
 
+        void setClipPlanes(float near, float far) {
+            VRG3D::ProjectionVRCameraRef camera = m_frontend->getCamera();
+            VRG3D::DisplayTile tile = camera->getTile();
+            tile.nearClip = near;
+            tile.farClip = far;
+            camera->setDisplayTile(tile);
+        }
+
+    protected:
+        VrData *m_data;
+
     private:
-        VRFrontend *m_frontend;
+        VrFrontend *m_frontend;
     };
 
-    VRFrontend(const string &mySetup, Application *app);
-    virtual ~VRFrontend();
+    VrFrontend(const string &mySetup, Application *app);
+    virtual ~VrFrontend();
 
     // VRG3D events, translated into custom events and passed to m_app
     void doGraphics(G3D::RenderDevice *rd);
@@ -71,6 +83,7 @@ private:
 
     // The application this frontend will run
     Application *m_app;
+    VrData m_data;
 };
 
 #endif // VRFRONTEND_H

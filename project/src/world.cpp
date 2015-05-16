@@ -1,6 +1,6 @@
 #include "world.h"
 
-World::World(VRCamera *camera) : m_camera(camera), m_gravity(Vector3()) {
+World::World(VrCamera *camera) : m_camera(camera), m_gravity(Vector3()) {
 }
 
 World::~World() {
@@ -26,7 +26,9 @@ void World::tick(float seconds) {
 
     if (m_gravity != Vector3()) {
         for (int i = 0; i < m_entities.size(); i++) {
-            m_entities.at(i)->accelerate(m_gravity);
+            if (m_entities.at(i)->m_gravable) {
+                m_entities.at(i)->accelerate(m_gravity);
+            }
         }
     }
 }

@@ -1,9 +1,9 @@
 #include "graphics.h"
+#include <G3D/FileSystem.h>
 #include "obj.h"
 
 Graphics::Graphics() {
     m_quad = gluNewQuadric();
-
     debug = false;
 }
 
@@ -16,19 +16,21 @@ void Graphics::initializeGL() {
 }
 
 void Graphics::loadTexture(const string &path, const string &key) {
-    if(m_textures.find(key) != m_textures.end()) {
+    if (m_textures.find(key) != m_textures.end()) {
         return;
     }
 
-    // Set up the texture for rendering
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     G3D::Texture::Ref texture = G3D::Texture::fromFile(path);
     m_textures[key] = texture;
 }
 
 void Graphics::setupTexture(const string &key) {
-    G3D::Texture::Ref texture = m_textures[key];
+    if (m_textures.find(key) == m_textures.end()) {
+        return;
+	}
+
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, m_textures[key]->openGLID());
 }

@@ -1,7 +1,7 @@
 #include "entity.h"
 
 Entity::Entity(const Vector3 &pos, const Vector3 &dim, const Vector3 &vel) :
-    m_pos(pos), m_dim(dim), m_vel(vel), m_acc(Vector3()), m_purge(false) {
+    m_pos(pos), m_dim(dim), m_vel(vel), m_acc(Vector3()), m_purge(false), m_gravable(true), m_collidesTerrain(true) {
 }
 
 Entity::~Entity() {

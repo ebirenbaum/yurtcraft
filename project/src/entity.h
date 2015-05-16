@@ -37,7 +37,7 @@ public:
     inline Vector3 nextTranslation(float seconds) { return m_vel * seconds + m_acc * seconds * seconds; }
 
     Vector3 m_pos, m_vel, m_acc, m_dim;
-    bool m_purge;
+    bool m_purge, m_gravable, m_collidesTerrain;
 };
 
 #endif // ENTITY_H

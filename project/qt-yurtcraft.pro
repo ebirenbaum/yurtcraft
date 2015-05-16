@@ -34,12 +34,29 @@ SOURCES += \
     src/collisions.cpp \
     src/chunkfactory.cpp \
     src/chunk.cpp \
+    src/aab.cpp \
+    src/particlefireball.cpp \
+    src/particleemitter.cpp \
+    src/fireball.cpp \
+    src/vrdata.cpp \
     src/biomemanager.cpp \
     src/biometile.cpp \
     src/terrainfeature.cpp \
     src/biome.cpp \
     src/mountainbiome.cpp \
-    src/aab.cpp
+    src/mountainforestbiome.cpp \
+    src/tundrabiome.cpp \
+    src/junglebiome.cpp \
+    src/boulderfieldbiome.cpp \
+    src/forestbiome.cpp \
+    src/desertbiome.cpp \
+    src/grasslandsbiome.cpp \
+    src/terrainfeature.cpp \
+    src/treefeature.cpp \
+    src/boulderfeature.cpp \
+    src/mountainpeakfeature.cpp \
+    src/cactusfeature.cpp \
+    src/monorail.cpp
 
 HEADERS += \
     src/vrfrontend.h \
@@ -67,12 +84,28 @@ HEADERS += \
     src/chunk.h \
     src/blocktype.h \
     src/blockdef.h \
+    src/aab.h \
+    src/particlefireball.h \
+    src/particleemitter.h \
+    src/fireball.h \
+    src/vrdata.h \
     src/biomemanager.h \
     src/biometile.h \
     src/biome.h \
     src/mountainbiome.h \
+    src/mountainforest.h \
+    src/forestbiome.h \
+    src/tundrabiome.h \
+    src/grasslandsbiome.h \
+    src/junglebiome.h \
+    src/boulderfieldbiome.h \
+    src/desertbiome.h \
     src/terrainfeature.h \
-    src/aab.h
+    src/treefeature.h \
+    src/boulderfeature.h \
+    src/mountainpeakfeature.h \
+    src/cactusfeature.h \
+    src/monorail.h
 
 LIBS += -L/lib/x86_64-linux-gnu \
         -lGLU \

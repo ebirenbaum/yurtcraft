@@ -12,6 +12,7 @@ SampleApp::~SampleApp()
 void SampleApp::initGL()
 {
     this->setPureMouseDelta(true);
+    this->setClipPlanes(.1, 400);
 
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
@@ -23,8 +24,6 @@ void SampleApp::initGL()
     m_graphics = new Graphics();
 
     m_graphics->loadTexture("./res/img/terrain.png", "atlas");
-//    m_graphics->loadTexture("./res/img/entity/zombie.png"), "zombie");
-//    m_graphics->loadTexture("./res/img/entity/creeper.png"), "creeper");
 
     m_graphics->loadTexture("./res/img/skybox/posy.png", "skyboxtop");
     m_graphics->loadTexture("./res/img/skybox/negy.png", "skyboxbot");
@@ -33,10 +32,12 @@ void SampleApp::initGL()
     m_graphics->loadTexture("./res/img/skybox/negx.png", "skyboxleft");
     m_graphics->loadTexture("./res/img/skybox/posx.png", "skyboxright");
 
-    for (int i = 0; i < 10; i++) {
+    m_graphics->loadTexture("./res/img/particle.png", "particle");
+
+    /*for (int i = 0; i < 10; i++) {
         m_graphics->loadTexture(appendNum("./res/img/breaking/", i).append(".png"),
                                appendNum("break", i));
-    }
+    }*/
 
 //    // Basically, disable lighting for textures
 //    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
@@ -50,7 +51,7 @@ void SampleApp::initGL()
     glEnable(GL_COLOR_MATERIAL);
     glEnable(GL_LIGHTING);
 
-    m_world = new McWorld(0, &m_camera);
+    m_world = new McWorld(0, &m_camera, m_data);
 }
 
 void SampleApp::tick(float seconds)
@@ -96,4 +97,9 @@ void SampleApp::keyPressed(const string &key)
 void SampleApp::keyReleased(const string &key)
 {
     m_world->keyReleased(key);
+}
+
+void SampleApp::joystickPressed()
+{
+    m_world->joystickPressed();
 }
