@@ -1,8 +1,8 @@
 #include "particlefireball.h"
 
 ParticleFireball::ParticleFireball(Vector3 location, Vector3 color, float radius)
-    : ParticleEmitter(location, color, Vector3(), Vector3(0.0f, 5.f, 0.0f), .4f,
-                      25.0f, 10), m_inner(radius * .2), m_outer(radius * 1.2), m_maxLife(1) {
+    : ParticleEmitter(location, color, Vector3(), Vector3(0.0f, 5.f, 0.0f), .2f,
+                      25.0f, 200), m_inner(radius * .2), m_outer(radius * 1.2), m_maxLife(1), m_exploded(false) {
 }
 
 ParticleFireball::~ParticleFireball() {
@@ -23,12 +23,12 @@ void ParticleFireball::resetParticle(unsigned i) {
     p.p *= urand(m_inner, m_outer);
 
     p.f.x = -p.p.x * .3;
-    p.f.y = 0;
+    p.f.y = m_exploded ? 7 : 0;
     p.f.z = -p.p.z * .3;
 
-    p.d.x = -p.p.z;
-    p.d.y = .3;
-    p.d.z = p.p.x;
+    p.d.x = m_exploded ? p.p.x * 7 : -p.p.z;
+    p.d.y = m_exploded ? 5 : .3;
+    p.d.z = m_exploded ? p.p.z * 7 : p.p.x;
 
     // Add the location of the center
     p.p += m_pos;
@@ -39,7 +39,8 @@ void ParticleFireball::resetParticle(unsigned i) {
 }
 
 void ParticleFireball::explode(){
-    m_maxLife = 1.75;
+    m_maxLife = 1.5;
+    m_exploded = true;
 
     /*int num = 1000;
     Particle * moarParticles = new Particle[m_maxParticles + num];

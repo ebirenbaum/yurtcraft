@@ -1,8 +1,11 @@
 #include "fireball.h"
 
-Fireball::Fireball(const Vector3 &pos, const Vector3 &vel) : Entity(pos, Vector3(1,1,1), vel), m_life(3)
+#define RADIUS .2
+
+Fireball::Fireball(const Vector3 &pos, const Vector3 &vel)
+    : Entity(pos, Vector3(RADIUS, RADIUS, RADIUS), vel), m_life(10)
 {
-    m_fireball = new ParticleFireball(pos);
+    m_fireball = new ParticleFireball(pos, getColor(), RADIUS);
     m_explode = false;
     m_gravable = false;
 }
@@ -19,6 +22,7 @@ void Fireball::draw(Graphics *g)
 
 void Fireball::tick(float seconds)
 {
+    Entity::tick(seconds);
     m_life -= seconds;
     if (!m_explode) {
         if (m_life <= seconds) {
@@ -29,11 +33,12 @@ void Fireball::tick(float seconds)
             m_purge = true;
         }
     }
+    m_fireball->setPosition(m_pos);
 }
 
 Vector3 Fireball::getColor()
 {
-    return Vector3(1,.5,.2);
+    return Vector3(1,1,0);
 }
 
 void Fireball::collideVoxel(const VoxelCollision &voxel)
@@ -54,7 +59,7 @@ bool Fireball::isExploding()
 void Fireball::explode()
 {
     m_explode = true;
-    m_life = 1.5;
+    m_life = .7;
     m_vel = Vector3();
     m_fireball->explode();
 }

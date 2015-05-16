@@ -232,7 +232,7 @@ void VrFrontend::doTick()
 
     // Update previous time for the next tick.
     m_prevTime = now;
-    m_app->tick(.017);
+    m_app->tick(dt);
 }
 
 void VrFrontend::parseKeyEvent(const string &event)

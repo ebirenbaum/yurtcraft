@@ -24,15 +24,15 @@ void ParticleEmitter::resetParticles() {
 }
 
 void ParticleEmitter::draw(Graphics *g) {
-    g->setupTexture("particle");
-
 //    GLint min, mag;
 //    glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, &min);
 //    glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, &mag);
 //    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 //    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+    g->setupTexture("particle");
     glDepthMask(false);
+    glDisable(GL_LIGHTING);
     g->enableBlend();
     glDisable(GL_CULL_FACE);
 
@@ -78,6 +78,7 @@ void ParticleEmitter::draw(Graphics *g) {
 
     glEnable(GL_CULL_FACE);
     g->disableBlend();
+    glEnable(GL_LIGHTING);
     glDepthMask(true);
     g->teardownTexture();
 }

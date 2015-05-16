@@ -152,7 +152,7 @@ void McWorld::mousePressed(MouseEvent *event) {
 
     if (event->button == MOUSE_LEFT) {
         Vector3 base = m_camera->getEye() + m_camera->getLook(),
-                dir = m_camera->getLook() * 0;
+                dir = m_camera->getLook() * 20;
         m_entities.push_back(new Fireball(base, dir));
     }
 }
