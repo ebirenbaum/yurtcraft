@@ -1,9 +1,10 @@
 #include "fireball.h"
+#include "player.h"
 
 #define RADIUS .2
 
-Fireball::Fireball(const Vector3 &pos, const Vector3 &vel)
-    : Entity(pos, Vector3(RADIUS, RADIUS, RADIUS), vel), m_life(10)
+Fireball::Fireball(const Vector3 &pos, const Vector3 &vel, bool team)
+    : Entity(pos, Vector3(RADIUS, RADIUS, RADIUS), vel), m_life(10), m_friendly(team)
 {
     m_fireball = new ParticleFireball(pos, getColor(), RADIUS);
     m_explode = false;
@@ -48,7 +49,17 @@ void Fireball::collideVoxel(const VoxelCollision &voxel)
 
 void Fireball::collideCylinder(const Vector3 &mtv, Entity *other)
 {
+	if (Fireball *fireball = dynamic_cast<Fireball *>(other)) {
+		if (fireball->m_friendly != m_friendly) {
+			explode();
+		}
+	}
 
+	if (Player *p = dynamic_cast<Player *>(other)) {
+
+		explode();
+
+	}
 }
 
 bool Fireball::isExploding()

@@ -21,6 +21,8 @@ public:
     void draw(Graphics *g);
     void drawHUD(Graphics *g, const Vector2 &dim);
 
+void resolveCollisions();
+
     void adjustLighting();
 
     bool isGameOver() { return m_player->m_life < 0; }

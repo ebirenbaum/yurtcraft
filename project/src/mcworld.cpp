@@ -9,7 +9,7 @@ McWorld::McWorld(int seed, VrCamera *cam, VrData *data)
     McChunkFactory *factory = new McChunkFactory(seed);
     m_system->setChunkFactory(factory);
 
-    m_player = new Player(Vector3(0,60,0), m_system, m_camera);
+    m_player = new Player(Vector3(0,60,0), m_system, m_camera, data);
     m_entities.push_back(m_player);
 
     //Monorail *monorail = new Monorail(m_system, factory, m_player, m_player->m_pos);
@@ -46,33 +46,24 @@ void McWorld::tick(float seconds) {
     } else {
         m_timeRemove = 0;
     }
+
+    resolveCollisions();
 }
 
-//void McWorld::resolveCollisions() {
-//    foreach (Entity *e, _entities) {
-//        if (e->_pos.y <= 0) {
-//            e->_pos.y = 0;
-//            e->_vel.y = 0;
+void McWorld::resolveCollisions() {
+    for (int i = 0; i < m_entities.size(); i++) {
+        Entity *e1 = m_entities[i];
+        for (int j = i + 1; j < m_entities.size(); j++) {
+            Entity *e2 = m_entities[j];
 
-//            if (e == _player) {
-//                _player->resetJump();
-//            }
-//        }
-//    }
-
-//    for (int i = 0; i < _entities.size(); i++) {
-//        Entity *e1 = _entities.at(i);
-//        for (int j = i + 1; j < _entities.size(); j++) {
-//            Entity *e2 = _entities.at(j);
-
-//            Vector3 overlap = e1->getBoundingCylinder().collide(e2->getBoundingCylinder());
-//            if (overlap != Vector3()) {
-//                e1->collideCylinder(overlap, e2);
-//                e2->collideCylinder(-overlap, e1);
-//            }
-//        }
-//    }
-//}
+            Vector3 overlap = e1->getBoundingCylinder().collide(e2->getBoundingCylinder());
+            if (overlap != Vector3()) {
+                e1->collideCylinder(overlap, e2);
+                e2->collideCylinder(-overlap, e1);
+            }
+        }
+    }
+}
 
 void McWorld::draw(Graphics *g) {
     glPushMatrix();
@@ -161,7 +152,7 @@ void McWorld::mousePressed(MouseEvent *event) {
     if (event->button == MOUSE_LEFT) {
         Vector3 base = m_camera->getEye() + m_camera->getLook(),
                 dir = m_camera->getLook() * 20;
-        m_entities.push_back(new Fireball(base, dir));
+        m_entities.push_back(new Fireball(base, dir, true));
     }
 }
 
@@ -192,9 +183,9 @@ void McWorld::wandButtonPressed(WandButton button)
        //cout << frand() << endl;
 
 
-		Vector3 base = m_camera->getEye() + m_data->getWandDir(),
+		Vector3 base = m_camera->getEye() + m_data->getWandDir() * 3,
 		        dir = m_data->getWandDir() * 20;
-		m_entities.push_back(new Fireball(base, dir));
+		m_entities.push_back(new Fireball(base, dir, true));
 
 }
 
