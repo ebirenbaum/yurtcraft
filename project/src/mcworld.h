@@ -11,6 +11,8 @@
 #include "voxelsystem.h"
 #include "vrdata.h"
 
+class Enemy;
+
 class McWorld : public World {
 
 public:
@@ -18,6 +20,7 @@ public:
     virtual ~McWorld();
 
     void tick(float seconds);
+    void spawnEnemies();
     void draw(Graphics *g);
     void drawHUD(Graphics *g, const Vector2 &dim);
 
@@ -49,8 +52,12 @@ private:
 
     VrData *m_data;
 
+    vector<Enemy*> m_enemies;
+
     float m_time, m_timeRemove;
     bool m_removeHeld;
+
+    float m_spawnTimer;
 };
 
 #endif // MINECRAFTWORLD_H

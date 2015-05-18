@@ -1,6 +1,7 @@
 #include "mcworld.h"
 #include "fireball.h"
 #include "monorail.h"
+#include "enemy.h"
 
 McWorld::McWorld(int seed, VrCamera *cam, VrData *data)
     : World(cam), m_data(data), m_time(0), m_removeHeld(false), m_timeRemove(0) {
@@ -12,6 +13,7 @@ McWorld::McWorld(int seed, VrCamera *cam, VrData *data)
     m_player = new Player(Vector3(0,60,0), m_system, m_camera);
     m_entities.push_back(m_player);
 
+    m_spawnTimer = 0;
     //Monorail *monorail = new Monorail(m_system, factory, m_player, m_player->m_pos);
     //m_entities.push_back(monorail);
 
@@ -45,6 +47,24 @@ void McWorld::tick(float seconds) {
         }
     } else {
         m_timeRemove = 0;
+    }
+
+    m_spawnTimer -= seconds;
+    spawnEnemies();
+}
+
+void McWorld::spawnEnemies(){
+
+    if (m_spawnTimer <= 0){
+        m_spawnTimer = frand()*10+5;
+
+        Vector3 newPos = m_player->m_pos;
+
+        newPos += Vector3::randomDirection()*10;
+
+        Enemy *newEnemy = new Enemy(this, newPos);
+        m_enemies.push_back(newEnemy);
+        m_entities.push_back(newEnemy);
     }
 }
 

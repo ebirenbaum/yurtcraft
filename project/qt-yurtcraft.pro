@@ -57,7 +57,8 @@ SOURCES += \
     src/mountainpeakfeature.cpp \
     src/cactusfeature.cpp \
     src/monorail.cpp \
-    src/joint.cpp
+    src/joint.cpp \
+    src/enemy.cpp
 
 HEADERS += \
     src/vrfrontend.h \
@@ -107,7 +108,8 @@ HEADERS += \
     src/mountainpeakfeature.h \
     src/cactusfeature.h \
     src/monorail.h \
-    src/joint.h
+    src/joint.h \
+    src/enemy.h
 
 LIBS += -L/lib/x86_64-linux-gnu \
         -lGLU \

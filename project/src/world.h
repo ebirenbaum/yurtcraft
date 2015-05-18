@@ -32,8 +32,8 @@ public:
 
     inline void setGravity(const Vector3 &gravity) { m_gravity = gravity; }
 
-protected:
     vector<Entity *> m_entities;
+protected:
     VrCamera *m_camera;
 
 private:

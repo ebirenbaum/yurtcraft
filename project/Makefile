@@ -66,7 +66,7 @@ LIBS += -ldl -lX11  \
 
 all: yurtcraft
 
-yurtcraft: obj/vrfrontend.o obj/main.o obj/vrcamera.o obj/sampleapp.o obj/aab.o obj/chunk.o obj/chunkfactory.o obj/collisions.o obj/cylinder.o obj/ellipsoid.o obj/entity.o obj/graphics.o obj/mcchunk.o obj/mcchunkfactory.o obj/mcworld.o obj/noise.o obj/obj.o obj/player.o obj/skybox.o obj/triangle.o obj/voxelsystem.o obj/world.o obj/particleemitter.o obj/particlefireball.o obj/fireball.o obj/vrdata.o obj/biomemanager.o obj/biometile.o obj/terrainfeature.o obj/biome.o obj/mountainbiome.o obj/treefeature.o obj/cactusfeature.o obj/boulderfeature.o obj/mountainpeakfeature.o obj/grasslandsbiome.o obj/desertbiome.o obj/forestbiome.o obj/boulderfieldbiome.o obj/junglebiome.o obj/mountainforestbiome.o obj/tundrabiome.o obj/monorail.o obj/joint.o
+yurtcraft: obj/vrfrontend.o obj/main.o obj/vrcamera.o obj/sampleapp.o obj/aab.o obj/chunk.o obj/chunkfactory.o obj/collisions.o obj/cylinder.o obj/ellipsoid.o obj/entity.o obj/graphics.o obj/mcchunk.o obj/mcchunkfactory.o obj/mcworld.o obj/noise.o obj/obj.o obj/player.o obj/skybox.o obj/triangle.o obj/voxelsystem.o obj/world.o obj/particleemitter.o obj/particlefireball.o obj/fireball.o obj/vrdata.o obj/biomemanager.o obj/biometile.o obj/terrainfeature.o obj/biome.o obj/mountainbiome.o obj/treefeature.o obj/cactusfeature.o obj/boulderfeature.o obj/mountainpeakfeature.o obj/grasslandsbiome.o obj/desertbiome.o obj/forestbiome.o obj/boulderfieldbiome.o obj/junglebiome.o obj/mountainforestbiome.o obj/tundrabiome.o obj/monorail.o obj/joint.o obj/enemy.o
 	$(CPP) $(LDFLAGS) -o yurtcraft $^ $(LIB_DIRS) $(LIBS)
 
 #$(TARGET) : $(OBJS) 
