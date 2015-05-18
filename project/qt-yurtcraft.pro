@@ -56,7 +56,8 @@ SOURCES += \
     src/boulderfeature.cpp \
     src/mountainpeakfeature.cpp \
     src/cactusfeature.cpp \
-    src/monorail.cpp
+    src/monorail.cpp \
+    src/joint.cpp
 
 HEADERS += \
     src/vrfrontend.h \
@@ -105,7 +106,8 @@ HEADERS += \
     src/boulderfeature.h \
     src/mountainpeakfeature.h \
     src/cactusfeature.h \
-    src/monorail.h
+    src/monorail.h \
+    src/joint.h
 
 LIBS += -L/lib/x86_64-linux-gnu \
         -lGLU \

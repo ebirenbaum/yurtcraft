@@ -9,6 +9,16 @@
 #include "blockdef.h"
 #include "chunkfactory.h"
 
+struct ChunkGenThreadData {
+    bool active;
+    bool ready;
+    Chunk *chunk;
+    Vector3 address;
+    ChunkFactory *factory;
+};
+#define NUM_THREADS 8
+#define USE_THREADS false
+
 class VoxelSystem {
 
 public:
@@ -25,6 +35,8 @@ public:
     Block queryBlock(const Vector3 &pos);
     void setBlock(const Vector3 &pos, char type);
 
+    Chunk *loadChunk(const Vector3 &_address, bool immediate);
+
     BlockDef getBlockDef(char key) { return m_factory->getBlockDef(key); }
 
 private:
@@ -36,6 +48,9 @@ private:
     ChunkFactory *m_factory;
 
     queue<Vector3> _incoming, _outgoing;
+
+    pthread_t m_threads[NUM_THREADS];
+    struct ChunkGenThreadData m_threadData[NUM_THREADS];
 };
 
 #endif // VOXELWORLD_H

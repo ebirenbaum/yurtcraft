@@ -7,6 +7,11 @@ VoxelSystem::VoxelSystem(/*const string &atlas*/) : /*m_atlas(atlas), */m_factor
     m_xb = Vector2(-n,n);
     m_yb = Vector2(-n,n);
     m_zb = Vector2(-n,n);
+
+    for (int i = 0; i < NUM_THREADS; i++){
+        m_threadData[i].active = false;
+        m_threadData[i].ready = false;
+    }
 }
 
 VoxelSystem::~VoxelSystem() {
@@ -100,20 +105,20 @@ void VoxelSystem::collideEntity(float seconds, Entity *e) {
 
 VoxelIntersection VoxelSystem::raycast(const Ray &ray, vector<Entity *> *entities) {
     const int stepX = (ray.d.x > 0 ? 1 : (ray.d.x < 0 ? -1 : 0)),
-              stepY = (ray.d.y > 0 ? 1 : (ray.d.y < 0 ? -1 : 0)),
-              stepZ = (ray.d.z > 0 ? 1 : (ray.d.z < 0 ? -1 : 0));
+            stepY = (ray.d.y > 0 ? 1 : (ray.d.y < 0 ? -1 : 0)),
+            stepZ = (ray.d.z > 0 ? 1 : (ray.d.z < 0 ? -1 : 0));
 
     const float tDeltaX = fabs(1.0 / ray.d.x),
-                tDeltaY = fabs(1.0 / ray.d.y),
-                tDeltaZ = fabs(1.0 / ray.d.z);
+            tDeltaY = fabs(1.0 / ray.d.y),
+            tDeltaZ = fabs(1.0 / ray.d.z);
 
     int capX = (stepX >= 0 ? floor(ray.p.x) : ceil(ray.p.x)),
-        capY = (stepY >= 0 ? floor(ray.p.y) : ceil(ray.p.y)),
-        capZ = (stepZ >= 0 ? floor(ray.p.z) : ceil(ray.p.z));
+            capY = (stepY >= 0 ? floor(ray.p.y) : ceil(ray.p.y)),
+            capZ = (stepZ >= 0 ? floor(ray.p.z) : ceil(ray.p.z));
 
     float tMaxX = ((double)(capX + stepX) - ray.p.x) / ray.d.x,
-          tMaxY = ((double)(capY + stepY) - ray.p.y) / ray.d.y,
-          tMaxZ = ((double)(capZ + stepZ) - ray.p.z) / ray.d.z;
+            tMaxY = ((double)(capY + stepY) - ray.p.y) / ray.d.y,
+            tMaxZ = ((double)(capZ + stepZ) - ray.p.z) / ray.d.z;
 
     int lastStep = -1;
 
@@ -152,32 +157,40 @@ VoxelIntersection VoxelSystem::raycast(const Ray &ray, vector<Entity *> *entitie
             if (!block.isPassable()) {
                 Vector3 extra = (lastStep == 0 ? Vector3(-stepX, 0, 0)
                                                : (lastStep == 1 ? Vector3(0, -stepY, 0) : Vector3(0, 0, -stepZ)));
-//                if (_selected.valid && (_selected.p != next || _selected.n != extra)) {
-//                    _heldTime = 0;
-//                }
+                //                if (_selected.valid && (_selected.p != next || _selected.n != extra)) {
+                //                    _heldTime = 0;
+                //                }
                 return VoxelIntersection(lastStep == 0 ? tMaxX - tDeltaX : (lastStep == 1 ? tMaxY - tDeltaY : tMaxZ - tDeltaZ),
-                                 block, next, extra);
-//                _selected = Intersection(lastStep == 0 ? tMaxX - tDeltaX : (lastStep == 1 ? tMaxY - tDeltaY : tMaxZ - tDeltaZ),
-//                                    next, extra, true, (int)block);
-//                _mob = Intersection();
-//                _mob.t = 999999;
-//                _killIt = NULL;
+                                         block, next, extra);
+                //                _selected = Intersection(lastStep == 0 ? tMaxX - tDeltaX : (lastStep == 1 ? tMaxY - tDeltaY : tMaxZ - tDeltaZ),
+                //                                    next, extra, true, (int)block);
+                //                _mob = Intersection();
+                //                _mob.t = 999999;
+                //                _killIt = NULL;
             }
         }
     }
 
-//    foreach (Entity *et, _entities) {
-//        MinecraftEntity *e = (MinecraftEntity *)et;
-//        if (e != _player) {
-//            Intersection check = e->raycast(ray);
-//            if (check.valid && check.t < _selected.t && check.t < _mob.t) {
-//                _mob = check;
-//                _killIt = e;
-//            }
-//        }
-//    }
+    //    foreach (Entity *et, _entities) {
+    //        MinecraftEntity *e = (MinecraftEntity *)et;
+    //        if (e != _player) {
+    //            Intersection check = e->raycast(ray);
+    //            if (check.valid && check.t < _selected.t && check.t < _mob.t) {
+    //                _mob = check;
+    //                _killIt = e;
+    //            }
+    //        }
+    //    }
 
-//    if (_mob.valid) _selected = Intersection();
+    //    if (_mob.valid) _selected = Intersection();
+}
+
+void *generateChunkInThread(void *threadDataThing){
+    struct ChunkGenThreadData *data = (struct ChunkGenThreadData *) threadDataThing;
+
+    data->chunk = data->factory->createChunk(data->address);
+    data->ready = true;
+    pthread_exit(NULL);
 }
 
 void VoxelSystem::setChunkFixation(const Vector3 &pos) {
@@ -188,8 +201,39 @@ void VoxelSystem::setChunkFixation(const Vector3 &pos) {
         Vector3 next = _incoming.front();
         _incoming.pop();
         if (m_chunks.find(next.toPair()) != m_chunks.end()) continue;
-        m_chunks[next.toPair()] = m_factory->getChunk(next);
+        if (USE_THREADS){
+            int _useableThread = -1;
+            for (int i = 0; i < NUM_THREADS; i++){
+                if (!m_threadData[i].active){
+                    _useableThread = i;
+                    break;
+                }
+            }
+            if (_useableThread == -1){
+                _incoming.push(next);
+                break;
+            }
+            m_threadData[_useableThread].address = next;
+            m_threadData[_useableThread].factory = m_factory;
+            m_threadData[_useableThread].active = true;
+            m_threadData[_useableThread].ready = false;
+            pthread_create(&m_threads[_useableThread], NULL, generateChunkInThread, (void *)&(m_threadData[_useableThread]));
+        } else {
+            m_chunks[next.toPair()] = m_factory->getChunk(next);
+        }
         if (--count == 0) break;
+    }
+
+    if (USE_THREADS){
+        for (int i = 0; i < NUM_THREADS; i++){
+            if (m_threadData[i].ready){
+                m_threadData[i].chunk->resetVbo();
+                m_chunks[m_threadData[i].address.toPair()] = m_threadData[i].chunk;
+                m_threadData[i].ready = false;
+                m_threadData[i].active = false;
+                break; // only one per frame
+            }
+        }
     }
 
     count = 2;
