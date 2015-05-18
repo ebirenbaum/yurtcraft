@@ -33,7 +33,7 @@ Vector3 VrData::getWandDir()
         return Vector3(0,0,0);
     }
     G3D::Vector3 look = (*m_frames)["Wand_Tracker"].lookVector();
-    return Vector3(look.x, look.y, look.z);
+    return Vector3(-look.z, look.y, look.x);
 }
 
 Vector3 VrData::getWandPos()

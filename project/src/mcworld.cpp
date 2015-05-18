@@ -9,13 +9,13 @@ McWorld::McWorld(int seed, VrCamera *cam, VrData *data)
     McChunkFactory *factory = new McChunkFactory(seed);
     m_system->setChunkFactory(factory);
 
-    m_player = new Player(Vector3(0,20,0), m_system, m_camera);
+    m_player = new Player(Vector3(0,60,0), m_system, m_camera);
     m_entities.push_back(m_player);
 
-    Monorail *monorail = new Monorail(m_system, factory, m_player, m_player->m_pos);
-    m_entities.push_back(monorail);
+    //Monorail *monorail = new Monorail(m_system, factory, m_player, m_player->m_pos);
+    //m_entities.push_back(monorail);
 
-    setGravity(Vector3(0,-15,0));
+    //setGravity(Vector3(0,-15,0));
 }
 
 McWorld::~McWorld() {
@@ -177,10 +177,6 @@ void McWorld::mouseWheeled(int delta) {
     m_player->mouseWheeled(delta);
 }
 
-void McWorld::joystickPressed() {
-    m_player->keyPressed("SPACE");
-}
-
 Vector3 McWorld::getPlayerPosition() {
     return m_player->m_pos;
 }
@@ -188,3 +184,22 @@ Vector3 McWorld::getPlayerPosition() {
 void McWorld::resize(float aspectRatio) {
     m_player->resize(aspectRatio);
 }
+
+void McWorld::wandButtonPressed(WandButton button)
+{
+	m_player->wandButtonPressed(button);
+
+       //cout << frand() << endl;
+
+
+		Vector3 base = m_camera->getEye() + m_data->getWandDir(),
+		        dir = m_data->getWandDir() * 20;
+		m_entities.push_back(new Fireball(base, dir));
+
+}
+
+void McWorld::wandButtonReleased(WandButton button)
+{
+	m_player->wandButtonReleased(button);
+}
+

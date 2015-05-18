@@ -27,7 +27,8 @@ public:
     void mouseReleased(MouseEvent *e);
     void mouseWheeled(int delta);
 
-    void joystickPressed();
+    void wandButtonPressed(WandButton button);
+    void wandButtonReleased(WandButton button);
 
 private:
     Graphics *m_graphics;

@@ -66,7 +66,7 @@ void VoxelSystem::collideEntity(float seconds, Entity *e) {
         Chunk *chunk = m_chunks[currChunk.toPair()];
         chunk->collide(seconds, e);
     } else {
-        m_chunks[currChunk.toPair()] = m_factory->getChunk(currChunk);
+        //m_chunks[currChunk.toPair()] = m_factory->getChunk(currChunk);
     }
 
     Vector3 nextTranslation = e->nextTranslation(seconds),
@@ -76,7 +76,7 @@ void VoxelSystem::collideEntity(float seconds, Entity *e) {
         Chunk *chunk = m_chunks[nextChunk.toPair()];
         chunk->collide(seconds, e);
     } else {
-        m_chunks[nextChunk.toPair()] = m_factory->getChunk(nextChunk);
+        //m_chunks[nextChunk.toPair()] = m_factory->getChunk(nextChunk);
     }
 
     AAB entityAAB = e->getBoundingBox();
@@ -92,7 +92,7 @@ void VoxelSystem::collideEntity(float seconds, Entity *e) {
                     chunk->collide(seconds, e);
                 }
             } else {
-                m_chunks[temp.toPair()] = m_factory->getChunk(temp);
+                //m_chunks[temp.toPair()] = m_factory->getChunk(temp);
             }
         }
     }

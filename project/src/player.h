@@ -36,6 +36,9 @@ public:
     void keyPressed(const string &key);
     void keyReleased(const string &key);
 
+void wandButtonPressed(WandButton button);
+	void wandButtonReleased(WandButton button);
+
     void resize(float aspectRatio);
 
     Vector3 getHorizontalLook();

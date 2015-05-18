@@ -51,6 +51,7 @@ void VrFrontend::doGraphics(G3D::RenderDevice *rd)
             glPopAttrib();
         }
     }
+    glColor4f(1,1,1,1);
 
 
     // The tracker frames above are drawn with the object to world
@@ -189,9 +190,17 @@ void VrFrontend::doUserInput(G3D::Array<VRG3D::EventRef> &events)
             continue;
         }
 
-        else if (event == "VRPNButtonDevice_Unknown_Event_down") {
-            m_app->keyPressed("SPACE");
+        else if (G3D::beginsWith(event, "B1_")) {
+            if (G3D::endsWith(event, "up")) {
+		m_app->wandButtonReleased(JOYSTICK_MIDDLE);
+	    } else {
+		m_app->wandButtonPressed(JOYSTICK_MIDDLE);
+	    }
         }
+
+	else if (G3D::beginsWith(event, "Wand_")) {
+		parseWandEvent(event);
+	}
 
 
         else {
@@ -232,7 +241,7 @@ void VrFrontend::doTick()
 
     // Update previous time for the next tick.
     m_prevTime = now;
-    m_app->tick(dt);
+    m_app->tick(1. / 40.);
 }
 
 void VrFrontend::parseKeyEvent(const string &event)
@@ -270,3 +279,22 @@ void VrFrontend::parseMouseEvent(const string &event)
         m_app->mouseReleased(&e);
     }
 }
+
+void VrFrontend::parseWandEvent(const string &event)
+{
+	string wand = event.substr(5);
+	if (G3D::beginsWith(wand, "Left")) {
+		if (G3D::endsWith(wand, "Up")) {
+			m_app->wandButtonReleased(WAND_LEFT);
+		} else if (G3D::endsWith(wand, "Down")) {
+			m_app->wandButtonPressed(WAND_LEFT);
+		}
+	} else if (G3D::beginsWith(wand, "Right")) {
+		if (G3D::endsWith(wand, "Up")) {
+			m_app->wandButtonReleased(WAND_RIGHT);
+		} else if (G3D::endsWith(wand, "Down")) {
+			m_app->wandButtonPressed(WAND_RIGHT);
+		}
+	}
+}
+

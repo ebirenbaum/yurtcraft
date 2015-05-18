@@ -143,6 +143,16 @@ void Player::keyPressed(const string &key) {
     }
 }
 
+void Player::wandButtonPressed(WandButton button)
+{
+	
+}
+
+void Player::wandButtonReleased(WandButton button)
+{
+
+}
+
 void Player::keyReleased(const string &key) {
     m_heldKeys.erase(key);
 }
