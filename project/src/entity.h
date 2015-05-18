@@ -27,7 +27,7 @@ public:
     virtual void translate(const Vector3 &trans);
     virtual void accelerate(const Vector3 &acc);
 
-    inline Cylinder getBoundingCylinder() const { return Cylinder(m_pos, MAX(m_dim.x, m_dim.z) / 2, m_dim.y); }
+    virtual Cylinder getBoundingCylinder() const { return Cylinder(m_pos, MAX(m_dim.x, m_dim.z) / 2, m_dim.y); }
     inline AAB getBoundingBox() const { Vector3 diff(m_dim.x / 2, 0, m_dim.z / 2);
                                         return AAB(m_pos - diff, m_pos + diff + Vector3(0, m_dim.y, 0)); }
 

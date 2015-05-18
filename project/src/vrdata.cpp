@@ -24,7 +24,7 @@ Vector3 VrData::getHeadPos()
         return Vector3(0,0,0);
     }
     G3D::Vector3 pos = (*m_frames)["Head_Tracker"].lookRay().origin();
-    return Vector3(pos.x, pos.y, pos.z);
+    return Vector3(-pos.z, pos.y, pos.x);
 }
 
 Vector3 VrData::getWandDir()

@@ -1,11 +1,12 @@
 #include "player.h"
+#include "fireball.h"
 
-Player::Player(const Vector3 &pos, VoxelSystem *system, VrCamera *cam)
-    : Entity(pos, Vector3(WIDTH, HEIGHT, WIDTH)), m_voxels(system), m_camera(cam) {
+Player::Player(const Vector3 &pos, VoxelSystem *system, VrCamera *cam, VrData *data)
+    : Entity(pos, Vector3(WIDTH, HEIGHT, WIDTH)), m_voxels(system), m_camera(cam), m_data(data) {
     m_canJump = false;
     m_block = GRASS;
     m_speed = 12;
-    m_life = 1;
+    m_life = 5;
 }
 
 Player::~Player() {
@@ -101,16 +102,6 @@ void Player::resetJump() {
     m_canJump = true;
 }
 
-void Player::collideCylinder(const Vector3 &mtv, Entity *other) {
-    Entity::collideCylinder(mtv, other);
-    if (mtv.y < EPS) {
-        m_vel = mtv.unit() * 6;
-        m_vel.y += 6;
-        m_canJump = false;
-
-        m_life = MAX(m_life--, -1);
-    }
-}
 
 void Player::collideVoxel(const VoxelCollision &voxel) {
     if (voxel.mtv == Vector3(0,1,0)) {
@@ -151,6 +142,15 @@ void Player::wandButtonPressed(WandButton button)
 void Player::wandButtonReleased(WandButton button)
 {
 
+}
+
+void Player::collideCylinder(const Vector3 &mtv, Entity *other)
+{
+	if (Fireball *fireball = dynamic_cast<Fireball *>(other)) {
+		if (!fireball->m_friendly) {
+			m_life--;
+		}
+	}
 }
 
 void Player::keyReleased(const string &key) {

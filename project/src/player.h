@@ -5,6 +5,7 @@
 #include "entity.h"
 #include "voxelsystem.h"
 #include "mcchunkfactory.h"
+#include "vrdata.h"
 
 #define HEIGHT 1.6
 #define WIDTH .8
@@ -15,7 +16,7 @@
 class Player : public Entity {
 
 public:
-    Player(const Vector3 &pos, VoxelSystem *system, VrCamera *cam);
+    Player(const Vector3 &pos, VoxelSystem *system, VrCamera *cam, VrData *data);
     virtual ~Player();
 
     void tick(float seconds);
@@ -41,6 +42,8 @@ void wandButtonPressed(WandButton button);
 
     void resize(float aspectRatio);
 
+Cylinder getBoundingCylinder() const { Vector3 p = m_pos + m_data->getHeadPos(); p.y = 0; return Cylinder(p, MAX(m_dim.x, m_dim.z) / 2, m_dim.y); }
+
     Vector3 getHorizontalLook();
     Ray getRay();
 
@@ -55,6 +58,7 @@ protected:
     float m_speed;
 
     VoxelSystem *m_voxels;
+	VrData *m_data;
 };
 
 #endif // PLAYER_H
