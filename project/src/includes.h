@@ -9,6 +9,12 @@ enum MouseButton {
     MOUSE_MIDDLE
 };
 
+enum WandButton {
+    WAND_LEFT,
+    WAND_RIGHT,
+    JOYSTICK_MIDDLE
+};
+
 struct MouseEvent {
     Vector2 pos;
     MouseButton button;

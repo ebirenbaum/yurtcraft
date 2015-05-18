@@ -33,7 +33,8 @@ public:
     void mouseMoved(const Vector2 &delta);
     void mouseWheeled(int delta);
 
-    void joystickPressed();
+    void wandButtonPressed(WandButton button);
+	void wandButtonReleased(WandButton button);
 
     void resize(float aspectRatio);
 

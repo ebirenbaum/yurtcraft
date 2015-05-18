@@ -35,11 +35,12 @@ public:
         virtual void mouseReleased(MouseEvent *e) = 0;
         virtual void mouseWheeled(int delta) = 0;
 
-        virtual void joystickPressed() = 0;
+        virtual void wandButtonPressed(WandButton button) = 0;
+	virtual void wandButtonReleased(WandButton button) = 0;
 
         VrCamera m_camera;
 
-        inline void setFrontend(VrFrontend *front, VrData *data) { m_frontend = front; m_data = data; }
+        virtual void setFrontend(VrFrontend *front, VrData *data) { m_frontend = front; m_data = data; }
         inline void setPureMouseDelta(bool val) { m_frontend->_userInput->setPureDeltaMouse(val); }
 
         void setClipPlanes(float near, float far) {
@@ -80,6 +81,7 @@ private:
     // For parsing event strings into events for m_app
     void parseKeyEvent(const string &event);
     void parseMouseEvent(const string &event);
+    void parseWandEvent(const string &event);
 
     // The application this frontend will run
     Application *m_app;

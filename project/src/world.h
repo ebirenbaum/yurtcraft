@@ -28,8 +28,6 @@ public:
     virtual void mouseMoved(const Vector2 &delta) = 0;
     virtual void mouseWheeled(int delta) = 0;
 
-    virtual void joystickPressed() = 0;
-
     virtual void resize(float aspectRatio) = 0;
 
     inline void setGravity(const Vector3 &gravity) { m_gravity = gravity; }
