@@ -14,8 +14,8 @@ McWorld::McWorld(int seed, VrCamera *cam, VrData *data)
     m_entities.push_back(m_player);
 
     m_hit = 1;
-	m_num = 0;
-	m_next = 1;
+    m_num = 0;
+    m_next = 1;
 
     m_spawnTimer = 15;
     //Monorail *monorail = new Monorail(m_system, factory, m_player, m_player->m_pos);
@@ -54,9 +54,13 @@ void McWorld::tick(float seconds) {
     }
 
     m_spawnTimer -= seconds;
-m_hit += seconds; if (m_hit > 1) { m_hit = 1; }
+    m_hit += seconds; if (m_hit > 1) { m_hit = 1; }
     spawnEnemies();
-resolveCollisions();
+    resolveCollisions();
+
+    if (isGameOver()) {
+        m_hit = 0;
+    }
 }
 
 void McWorld::spawnEnemies(){
@@ -65,10 +69,10 @@ void McWorld::spawnEnemies(){
         m_spawnTimer = frand()*10+15 * (1. / m_next);
 
         Vector3 newPos = m_player->m_pos;
-	Vector3 delta = Vector3::randomDirection()*30;
-	delta.x = fabs(delta.x);
-	delta.x += 20;
-	delta.y = fabs(delta.y);
+        Vector3 delta = Vector3::randomDirection()*30;
+        delta.x = fabs(delta.x);
+        delta.x += 20;
+        delta.y = fabs(delta.y);
 
         newPos += delta;
 
@@ -82,14 +86,14 @@ void McWorld::spawnEnemies(){
 
         Enemy *newEnemy = new Enemy(this, newPos);
         m_entities.push_back(newEnemy);
-	m_num++;
+        m_num++;
     }
 
-	if (m_num == m_next && m_entities.size() == 1) {
-		m_next++;
-		m_num = 0;
-		m_spawnTimer = 0;
-	}
+    if (m_num == m_next && m_entities.size() == 1) {
+        m_next++;
+        m_num = 0;
+        m_spawnTimer = 0;
+    }
 }
 
 void McWorld::resolveCollisions() {
@@ -101,23 +105,23 @@ void McWorld::resolveCollisions() {
             if (overlap != Vector3()) {
                 e1->collideCylinder(overlap, e2);
                 e2->collideCylinder(-overlap, e1);
-//cout << "HIT something" << endl;
+                //cout << "HIT something" << endl;
 
-		if (Player *p = dynamic_cast<Player *>(e1)) {
-//cout << "HIT" << endl;
-			m_hit = 0;
-		}
-		if (Player *p = dynamic_cast<Player *>(e2)) {
-			m_hit = 0;
-//cout << "HIT" << endl;
-		}
+                if (Player *p = dynamic_cast<Player *>(e1)) {
+                    //cout << "HIT" << endl;
+                    m_hit = 0;
+                }
+                if (Player *p = dynamic_cast<Player *>(e2)) {
+                    m_hit = 0;
+                    //cout << "HIT" << endl;
+                }
             }
         }
     }
 }
 
 void McWorld::draw(Graphics *g) {
-adjustLighting();
+    adjustLighting();
     glColor3f(1, m_hit, m_hit);
     glPushMatrix();
     g->translate(m_player->m_pos);
@@ -232,19 +236,19 @@ void McWorld::resize(float aspectRatio) {
 
 void McWorld::wandButtonPressed(WandButton button)
 {
-	m_player->wandButtonPressed(button);
+    if (isGameOver()) {
+        return;
+    }
+    m_player->wandButtonPressed(button);
 
-       //cout << frand() << endl;
-
-
-		Vector3 base = m_player->getPos() + Vector3(0,.6,0) + m_data->getWandDir() * 4,
-		        dir = m_data->getWandDir() * 20;
-		m_entities.push_back(new Fireball(base, dir, true, Vector3(1,1,0)));
+    Vector3 base = m_player->getPos() + Vector3(0,.6,0) + m_data->getWandDir() * 4,
+            dir = m_data->getWandDir() * 20;
+    m_entities.push_back(new Fireball(base, dir, true, Vector3(1,1,0)));
 
 }
 
 void McWorld::wandButtonReleased(WandButton button)
 {
-	m_player->wandButtonReleased(button);
+    m_player->wandButtonReleased(button);
 }
 

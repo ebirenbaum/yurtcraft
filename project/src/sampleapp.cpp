@@ -89,6 +89,9 @@ void SampleApp::keyPressed(const string &key)
     // Exit on escape
     if (key == "ESC") {
         exit(0);
+    } else if (key == "R") {
+        m_world = new McWorld(0, &m_camera, m_data);
+        return;
     }
 
     m_world->keyPressed(key);
@@ -101,6 +104,12 @@ void SampleApp::keyReleased(const string &key)
 
 void SampleApp::wandButtonPressed(WandButton button)
 {
+    if (m_world->isGameOver()) {
+        if (button == JOYSTICK_MIDDLE) {
+            m_world = new McWorld(0, &m_camera, m_data);
+        }
+        return;
+    }
 	m_world->wandButtonPressed(button);
 }
 

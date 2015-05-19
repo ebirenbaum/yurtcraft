@@ -243,7 +243,7 @@ void VrFrontend::doTick()
 
     // Update previous time for the next tick.
     m_prevTime = now;
-    m_app->tick(1. / 40.);
+    m_app->tick(1. / 50.);
 }
 
 void VrFrontend::parseKeyEvent(const string &event)

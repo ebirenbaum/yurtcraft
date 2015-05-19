@@ -29,7 +29,10 @@ void resolveCollisions();
     void adjustLighting();
 
 
-    bool isGameOver() { return m_player->m_life < 0; }
+    bool isGameOver() {
+        if (m_player->m_life < 0) { cout << "Score: " << m_next << endl; }
+        return m_player->m_life < 0;
+    }
 
     void keyPressed(const string &key);
     void keyReleased(const string &key);
