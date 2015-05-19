@@ -36,7 +36,7 @@ void Chunk::draw(Graphics *g) {
 }
 
 void Chunk::transparentDraw(Graphics *g) {
-    glColor4f(1,1,1,1);
+    //glColor4f(1,1,1,1);
     glPushMatrix();
     g->translate(m_trans);
 

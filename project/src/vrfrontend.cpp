@@ -140,6 +140,7 @@ void VrFrontend::doUserInput(G3D::Array<VRG3D::EventRef> &events)
     for (int i = 0; i < events.size(); i++) {
         string event = events[i]->getName();
 
+
         // Save all the tracker events that come in so we can use them
         // in the doGraphics routine
         if (G3D::endsWith(event, "_Tracker")) {
@@ -199,6 +200,7 @@ void VrFrontend::doUserInput(G3D::Array<VRG3D::EventRef> &events)
         }
 
 	else if (G3D::beginsWith(event, "Wand_")) {
+		
 		parseWandEvent(event);
 	}
 
@@ -283,16 +285,17 @@ void VrFrontend::parseMouseEvent(const string &event)
 void VrFrontend::parseWandEvent(const string &event)
 {
 	string wand = event.substr(5);
+
 	if (G3D::beginsWith(wand, "Left")) {
-		if (G3D::endsWith(wand, "Up")) {
+		if (G3D::endsWith(wand, "up")) {
 			m_app->wandButtonReleased(WAND_LEFT);
-		} else if (G3D::endsWith(wand, "Down")) {
+		} else if (G3D::endsWith(wand, "down")) {
 			m_app->wandButtonPressed(WAND_LEFT);
 		}
 	} else if (G3D::beginsWith(wand, "Right")) {
-		if (G3D::endsWith(wand, "Up")) {
+		if (G3D::endsWith(wand, "up")) {
 			m_app->wandButtonReleased(WAND_RIGHT);
-		} else if (G3D::endsWith(wand, "Down")) {
+		} else if (G3D::endsWith(wand, "down")) {
 			m_app->wandButtonPressed(WAND_RIGHT);
 		}
 	}

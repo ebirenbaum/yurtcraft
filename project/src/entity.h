@@ -34,6 +34,8 @@ public:
     virtual void collideCylinder(const Vector3 &mtv, Entity *other);
     virtual void collideVoxel(const VoxelCollision &voxel);
 
+	virtual Vector3 getPos() const { return m_pos; }
+
     inline Vector3 nextTranslation(float seconds) { return m_vel * seconds + m_acc * seconds * seconds; }
 
     Vector3 m_pos, m_vel, m_acc, m_dim;

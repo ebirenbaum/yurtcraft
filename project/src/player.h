@@ -42,12 +42,14 @@ void wandButtonPressed(WandButton button);
 
     void resize(float aspectRatio);
 
-Cylinder getBoundingCylinder() const { Vector3 p = m_pos + m_data->getHeadPos(); p.y = 0; return Cylinder(p, MAX(m_dim.x, m_dim.z) / 2, m_dim.y); }
+Cylinder getBoundingCylinder() const { Vector3 p = getPos(); return Cylinder(p, MAX(m_dim.x, m_dim.z) / 2, m_dim.y); }
 
     Vector3 getHorizontalLook();
     Ray getRay();
 
     int m_life, m_block;
+
+	Vector3 getPos() const { Vector3 vec = m_data->getHeadPos(); vec.y = HEIGHT / 2.; return m_pos + vec; }
 
 protected:
 

@@ -3,6 +3,7 @@
 
 #include "entity.h"
 #include "vector.h"
+#include "fireball.h"
 
 class McWorld;
 
@@ -15,9 +16,15 @@ public:
     virtual void tick(float seconds);
     virtual void draw(Graphics *g);
 
+	void collideCylinder(const Vector3 &mtv, Entity *other) {
+	if (Fireball *f = dynamic_cast<Fireball *>(other)) {
+		if (f->m_friendly) { m_purge = true; f->explode(); }
+	}
+}
+
 
     McWorld *m_world;
-    float shootTimer;
+    float shootTimer, yTimer, initY;
 };
 
 #endif // ENEMY_H2

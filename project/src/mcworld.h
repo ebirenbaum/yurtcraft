@@ -28,6 +28,7 @@ void resolveCollisions();
 
     void adjustLighting();
 
+
     bool isGameOver() { return m_player->m_life < 0; }
 
     void keyPressed(const string &key);
@@ -54,12 +55,11 @@ private:
 
     VrData *m_data;
 
-    vector<Enemy*> m_enemies;
-
     float m_time, m_timeRemove;
     bool m_removeHeld;
 
-    float m_spawnTimer;
+    float m_spawnTimer, m_hit;
+	int m_num, m_next;
 };
 
 #endif // MINECRAFTWORLD_H

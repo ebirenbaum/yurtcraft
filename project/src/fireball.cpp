@@ -1,12 +1,12 @@
 #include "fireball.h"
 #include "player.h"
 
-#define RADIUS .2
+#define RADIUS 1
 
-Fireball::Fireball(const Vector3 &pos, const Vector3 &vel, bool team)
+Fireball::Fireball(const Vector3 &pos, const Vector3 &vel, bool team, const Vector3 &col)
     : Entity(pos, Vector3(RADIUS, RADIUS, RADIUS), vel), m_life(10), m_friendly(team)
 {
-    m_fireball = new ParticleFireball(pos, getColor(), RADIUS);
+    m_fireball = new ParticleFireball(pos, col, RADIUS);
     m_explode = false;
     m_gravable = false;
 }
@@ -69,8 +69,11 @@ bool Fireball::isExploding()
 
 void Fireball::explode()
 {
+    if (m_explode) return;
     m_explode = true;
     m_life = .7;
     m_vel = Vector3();
     m_fireball->explode();
+
+	if (!m_friendly) m_fireball->setColor(Vector3(1,0,0));
 }

@@ -33,7 +33,7 @@ void Player::draw(Graphics *g) {
     }
 
     glDisable(GL_LIGHTING);
-    g->renderTexturedCube("atlas", vecs);
+    //g->renderTexturedCube("atlas", vecs);
     glEnable(GL_LIGHTING);
 
     delete[] vecs;
@@ -147,8 +147,10 @@ void Player::wandButtonReleased(WandButton button)
 void Player::collideCylinder(const Vector3 &mtv, Entity *other)
 {
 	if (Fireball *fireball = dynamic_cast<Fireball *>(other)) {
+
 		if (!fireball->m_friendly) {
 			m_life--;
+//cout << "player hit" << endl;
 		}
 	}
 }

@@ -6,7 +6,7 @@
 
 class Fireball : public Entity {
 public:
-    Fireball(const Vector3 &pos, const Vector3 &vel, bool team);
+    Fireball(const Vector3 &pos, const Vector3 &vel, bool team, const Vector3 &col);
     virtual ~Fireball();
 
     void draw(Graphics *g);
@@ -20,13 +20,14 @@ public:
     virtual void collideVoxel(const VoxelCollision &voxel);
 
 	bool m_friendly;
+void explode();
 
 private:
     ParticleFireball *m_fireball;
     float m_life;
     bool m_explode;
 
-    void explode();
+    
 };
 
 #endif // FIREBALL_H

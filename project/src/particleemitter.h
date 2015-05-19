@@ -23,6 +23,7 @@ public:
 
     inline void setPosition(const Vector3 &pos) { m_pos = pos; }
     inline void toggle(bool toggle) { m_toggle = toggle; }
+	inline void setColor(const Vector3 &col) { m_color = col; }
 
 protected:
 

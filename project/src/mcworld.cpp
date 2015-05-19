@@ -10,10 +10,14 @@ McWorld::McWorld(int seed, VrCamera *cam, VrData *data)
     McChunkFactory *factory = new McChunkFactory(seed);
     m_system->setChunkFactory(factory);
 
-    m_player = new Player(Vector3(0,60,0), m_system, m_camera);
+    m_player = new Player(Vector3(-5,50,0), m_system, m_camera, data);
     m_entities.push_back(m_player);
 
-    m_spawnTimer = 0;
+    m_hit = 1;
+	m_num = 0;
+	m_next = 1;
+
+    m_spawnTimer = 15;
     //Monorail *monorail = new Monorail(m_system, factory, m_player, m_player->m_pos);
     //m_entities.push_back(monorail);
 
@@ -50,51 +54,71 @@ void McWorld::tick(float seconds) {
     }
 
     m_spawnTimer -= seconds;
+m_hit += seconds; if (m_hit > 1) { m_hit = 1; }
     spawnEnemies();
+resolveCollisions();
 }
 
 void McWorld::spawnEnemies(){
 
-    if (m_spawnTimer <= 0){
-        m_spawnTimer = frand()*10+5;
+    if (m_spawnTimer <= 0 && m_num < m_next){
+        m_spawnTimer = frand()*10+15 * (1. / m_next);
 
         Vector3 newPos = m_player->m_pos;
+	Vector3 delta = Vector3::randomDirection()*30;
+	delta.x = fabs(delta.x);
+	delta.x += 20;
+	delta.y = fabs(delta.y);
 
-        newPos += Vector3::randomDirection()*10;
+        newPos += delta;
+
+        for (int ty = 0; ty < 100; ty++){
+            bool passable = m_system->queryBlock(Vector3(newPos.x, newPos.y+ty, newPos.z)).isPassable();
+            if (passable){
+                newPos.y += ty + 2;
+                break;
+            }
+        }
 
         Enemy *newEnemy = new Enemy(this, newPos);
-        m_enemies.push_back(newEnemy);
         m_entities.push_back(newEnemy);
+	m_num++;
+    }
+
+	if (m_num == m_next && m_entities.size() == 1) {
+		m_next++;
+		m_num = 0;
+		m_spawnTimer = 0;
+	}
+}
+
+void McWorld::resolveCollisions() {
+    for (int i = 0; i < m_entities.size(); i++) {
+        Entity *e1 = m_entities[i];
+        for (int j = i + 1; j < m_entities.size(); j++) {
+            Entity *e2 = m_entities.at(j);
+            Vector3 overlap = e1->getBoundingCylinder().collide(e2->getBoundingCylinder());
+            if (overlap != Vector3()) {
+                e1->collideCylinder(overlap, e2);
+                e2->collideCylinder(-overlap, e1);
+//cout << "HIT something" << endl;
+
+		if (Player *p = dynamic_cast<Player *>(e1)) {
+//cout << "HIT" << endl;
+			m_hit = 0;
+		}
+		if (Player *p = dynamic_cast<Player *>(e2)) {
+			m_hit = 0;
+//cout << "HIT" << endl;
+		}
+            }
+        }
     }
 }
 
-//void McWorld::resolveCollisions() {
-//    foreach (Entity *e, _entities) {
-//        if (e->_pos.y <= 0) {
-//            e->_pos.y = 0;
-//            e->_vel.y = 0;
-
-//            if (e == _player) {
-//                _player->resetJump();
-//            }
-//        }
-//    }
-
-//    for (int i = 0; i < _entities.size(); i++) {
-//        Entity *e1 = _entities.at(i);
-//        for (int j = i + 1; j < _entities.size(); j++) {
-//            Entity *e2 = _entities.at(j);
-
-//            Vector3 overlap = e1->getBoundingCylinder().collide(e2->getBoundingCylinder());
-//            if (overlap != Vector3()) {
-//                e1->collideCylinder(overlap, e2);
-//                e2->collideCylinder(-overlap, e1);
-//            }
-//        }
-//    }
-//}
-
 void McWorld::draw(Graphics *g) {
+adjustLighting();
+    glColor3f(1, m_hit, m_hit);
     glPushMatrix();
     g->translate(m_player->m_pos);
     m_skybox.draw(g);
@@ -102,9 +126,10 @@ void McWorld::draw(Graphics *g) {
 
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
-    adjustLighting();
-
+    glColor3f(1, m_hit, m_hit);
     m_system->draw(g);
+
+    glColor3f(1, m_hit, m_hit);
     World::draw(g);
 
     if (m_selected.t != -1) {
@@ -181,7 +206,7 @@ void McWorld::mousePressed(MouseEvent *event) {
     if (event->button == MOUSE_LEFT) {
         Vector3 base = m_camera->getEye() + m_camera->getLook(),
                 dir = m_camera->getLook() * 20;
-        m_entities.push_back(new Fireball(base, dir));
+        m_entities.push_back(new Fireball(base, dir, true, Vector3(1,1,0)));
     }
 }
 
@@ -198,7 +223,7 @@ void McWorld::mouseWheeled(int delta) {
 }
 
 Vector3 McWorld::getPlayerPosition() {
-    return m_player->m_pos;
+    return m_player->getPos();
 }
 
 void McWorld::resize(float aspectRatio) {
@@ -212,9 +237,9 @@ void McWorld::wandButtonPressed(WandButton button)
        //cout << frand() << endl;
 
 
-		Vector3 base = m_camera->getEye() + m_data->getWandDir(),
+		Vector3 base = m_player->getPos() + Vector3(0,.6,0) + m_data->getWandDir() * 4,
 		        dir = m_data->getWandDir() * 20;
-		m_entities.push_back(new Fireball(base, dir));
+		m_entities.push_back(new Fireball(base, dir, true, Vector3(1,1,0)));
 
 }
 

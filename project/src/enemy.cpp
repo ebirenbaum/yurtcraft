@@ -1,12 +1,15 @@
 #include "enemy.h"
 
 #include "mcworld.h"
-#include "fireball.h"
+
+#define TIMER 8
 
 Enemy::Enemy(McWorld *world, const Vector3 &pos)
-    : Entity(pos, Vector3(1, 3, 1)) {
+    : Entity(pos, Vector3(2.5, 3, 2.5)) {
     m_world = world;
     shootTimer = 1;
+	yTimer = 8;
+initY = pos.y;
 }
 
 Enemy::~Enemy()
@@ -18,14 +21,17 @@ Enemy::~Enemy()
 void Enemy::tick(float seconds){
 
     shootTimer -= seconds;
+	yTimer -= seconds;
     if (shootTimer <= 0){
-        shootTimer = 4;
+        shootTimer = TIMER * .8 + frand() * 3;
 
         Vector3 _dir = (m_world->getPlayerPosition() - m_pos);
         _dir.normalize();
-        m_world->m_entities.push_back(new Fireball(m_pos + _dir, _dir*10));
+        m_world->m_entities.push_back(new Fireball(m_pos + _dir, _dir*10, false, Vector3(0,.5,1)));
 
     }
+
+    m_pos.y = initY + (2 + 2 * cos((TIMER - yTimer) * M_PI / 4));
 }
 
 void Enemy::draw(Graphics *g){
