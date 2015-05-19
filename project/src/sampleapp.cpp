@@ -39,8 +39,8 @@ void SampleApp::initGL()
                                appendNum("break", i));
     }*/
 
-//    // Basically, disable lighting for textures
-//    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+    //    // Basically, disable lighting for textures
+    //    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 
     // Set up global (ambient) lighting
     GLfloat global_ambient[] = { .05f, .05f, .05f, .05f };
@@ -104,17 +104,12 @@ void SampleApp::keyReleased(const string &key)
 
 void SampleApp::wandButtonPressed(WandButton button)
 {
-    if (m_world->isGameOver()) {
-        if (button == JOYSTICK_MIDDLE) {
-            m_world = new McWorld(0, &m_camera, m_data);
-        }
-        return;
-    }
-	m_world->wandButtonPressed(button);
+    if (button == WAND_LEFT) m_world->tryRestart();
+    m_world->wandButtonPressed(button);
 }
 
 void SampleApp::wandButtonReleased(WandButton button)
 {
-	m_world->wandButtonReleased(button);
+    m_world->wandButtonReleased(button);
 }
 

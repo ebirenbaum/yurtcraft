@@ -252,3 +252,21 @@ void McWorld::wandButtonReleased(WandButton button)
     m_player->wandButtonReleased(button);
 }
 
+void McWorld::tryRestart()
+{
+    if (!isGameOver()) {
+        return;
+    }
+
+    cout << "Score: " << m_next << endl;
+
+    m_hit = 1;
+    m_num = 0;
+    m_next = 1;
+
+    m_spawnTimer = 15;
+
+    m_entities.clear();
+    m_entities.push_back(m_player);
+}
+

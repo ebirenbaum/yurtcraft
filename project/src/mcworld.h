@@ -24,15 +24,17 @@ public:
     void draw(Graphics *g);
     void drawHUD(Graphics *g, const Vector2 &dim);
 
-void resolveCollisions();
+    void resolveCollisions();
 
     void adjustLighting();
+    Player *m_player;
 
 
     bool isGameOver() {
-        if (m_player->m_life < 0) { cout << "Score: " << m_next << endl; }
         return m_player->m_life < 0;
     }
+
+    void tryRestart();
 
     void keyPressed(const string &key);
     void keyReleased(const string &key);
@@ -43,7 +45,7 @@ void resolveCollisions();
     void mouseWheeled(int delta);
 
     void wandButtonPressed(WandButton button);
-	void wandButtonReleased(WandButton button);
+    void wandButtonReleased(WandButton button);
 
     void resize(float aspectRatio);
 
@@ -51,7 +53,6 @@ void resolveCollisions();
 
 private:
     Skybox m_skybox;
-    Player *m_player;
 
     VoxelSystem *m_system;
     VoxelIntersection m_selected;
@@ -62,7 +63,7 @@ private:
     bool m_removeHeld;
 
     float m_spawnTimer, m_hit;
-	int m_num, m_next;
+    int m_num, m_next;
 };
 
 #endif // MINECRAFTWORLD_H

@@ -6,7 +6,7 @@ Player::Player(const Vector3 &pos, VoxelSystem *system, VrCamera *cam, VrData *d
     m_canJump = false;
     m_block = GRASS;
     m_speed = 12;
-    m_life = 5;
+    m_life = 100;
 }
 
 Player::~Player() {

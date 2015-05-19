@@ -24,6 +24,7 @@ void Enemy::tick(float seconds){
 	yTimer -= seconds;
     if (shootTimer <= 0){
         shootTimer = TIMER * .8 + frand() * 3;
+        if (m_world->m_player->m_life <= 0) return;
 
         Vector3 _dir = (m_world->getPlayerPosition() - m_pos);
         _dir.normalize();

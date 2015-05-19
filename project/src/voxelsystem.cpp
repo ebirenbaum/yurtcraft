@@ -3,7 +3,7 @@
 #include "entity.h"
 
 VoxelSystem::VoxelSystem(/*const string &atlas*/) : /*m_atlas(atlas), */m_factory(NULL) {
-    int n = 4;
+    int n = 3;
     m_xb = Vector2(-n,n);
     m_yb = Vector2(0,n);
     m_zb = Vector2(-n,n);
