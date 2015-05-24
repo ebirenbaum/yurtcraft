@@ -22,7 +22,6 @@ public:
 	bool m_friendly;
 void explode();
 
-private:
     ParticleFireball *m_fireball;
     float m_life;
     bool m_explode;

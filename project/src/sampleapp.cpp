@@ -105,7 +105,7 @@ void SampleApp::keyReleased(const string &key)
 void SampleApp::wandButtonPressed(WandButton button)
 {
     if (button == WAND_LEFT) m_world->tryRestart();
-    m_world->wandButtonPressed(button);
+    else m_world->wandButtonPressed(button);
 }
 
 void SampleApp::wandButtonReleased(WandButton button)

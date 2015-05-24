@@ -18,6 +18,7 @@ McWorld::McWorld(int seed, VrCamera *cam, VrData *data)
     m_next = 1;
 
     m_spawnTimer = 15;
+    m_shootCounter = .2;
     //Monorail *monorail = new Monorail(m_system, factory, m_player, m_player->m_pos);
     //m_entities.push_back(monorail);
 
@@ -61,12 +62,14 @@ void McWorld::tick(float seconds) {
     if (isGameOver()) {
         m_hit = 0;
     }
+    m_shootCounter -= seconds;
+    if (m_shootCounter < 0) m_shootCounter = 0;
 }
 
 void McWorld::spawnEnemies(){
 
     if (m_spawnTimer <= 0 && m_num < m_next){
-        m_spawnTimer = frand()*10+15 * (1. / m_next);
+        m_spawnTimer = frand()*6+7 * (1. / m_next);
 
         Vector3 newPos = m_player->m_pos;
         Vector3 delta = Vector3::randomDirection()*30;
@@ -241,10 +244,12 @@ void McWorld::wandButtonPressed(WandButton button)
     }
     m_player->wandButtonPressed(button);
 
+    if (m_shootCounter > 0) return;
     Vector3 base = m_player->getPos() + Vector3(0,.6,0) + m_data->getWandDir() * 4,
             dir = m_data->getWandDir() * 20;
     m_entities.push_back(new Fireball(base, dir, true, Vector3(1,1,0)));
-
+    m_shootCounter = .2;
+    
 }
 
 void McWorld::wandButtonReleased(WandButton button)
@@ -265,7 +270,7 @@ void McWorld::tryRestart()
     m_next = 1;
 
     m_spawnTimer = 15;
-
+    m_player->m_life = 5;
     m_entities.clear();
     m_entities.push_back(m_player);
 }

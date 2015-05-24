@@ -31,7 +31,7 @@ public:
 
 
     bool isGameOver() {
-        return m_player->m_life < 0;
+        return m_player->m_life <= 0;
     }
 
     void tryRestart();
@@ -51,7 +51,6 @@ public:
 
     Vector3 getPlayerPosition();
 
-private:
     Skybox m_skybox;
 
     VoxelSystem *m_system;
@@ -59,7 +58,7 @@ private:
 
     VrData *m_data;
 
-    float m_time, m_timeRemove;
+    float m_time, m_timeRemove, m_shootCounter;
     bool m_removeHeld;
 
     float m_spawnTimer, m_hit;

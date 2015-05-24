@@ -2,7 +2,7 @@
 
 #include "mcworld.h"
 
-#define TIMER 8
+#define TIMER 5
 
 Enemy::Enemy(McWorld *world, const Vector3 &pos)
     : Entity(pos, Vector3(2.5, 3, 2.5)) {
@@ -28,7 +28,7 @@ void Enemy::tick(float seconds){
 
         Vector3 _dir = (m_world->getPlayerPosition() - m_pos);
         _dir.normalize();
-        m_world->m_entities.push_back(new Fireball(m_pos + _dir, _dir*10, false, Vector3(0,.5,1)));
+        m_world->m_entities.push_back(new Fireball(m_pos + _dir, _dir*17, false, Vector3(0,.5,1)));
 
     }
 
@@ -38,9 +38,11 @@ void Enemy::tick(float seconds){
 void Enemy::draw(Graphics *g){
     glPushMatrix();
     g->translate(m_pos);
-    glColor3f(.2, .3, .7);
+    if (m_world->m_next % 3 == 0) glColor4f(1,0,0,1);
+    else if (m_world->m_next % 3 == 2) glColor4f(0,1,0,1);
+    else glColor4f(0,0,1,1);
+    glEnable(GL_COLOR_MATERIAL);
     g->renderCylinder(m_dim.x/2, m_dim.y);
-
     glPopMatrix();
     glColor3f(1, 1, 1);
 

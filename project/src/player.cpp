@@ -6,7 +6,7 @@ Player::Player(const Vector3 &pos, VoxelSystem *system, VrCamera *cam, VrData *d
     m_canJump = false;
     m_block = GRASS;
     m_speed = 12;
-    m_life = 100;
+    m_life = 5;
 }
 
 Player::~Player() {
@@ -148,7 +148,7 @@ void Player::collideCylinder(const Vector3 &mtv, Entity *other)
 {
 	if (Fireball *fireball = dynamic_cast<Fireball *>(other)) {
 
-		if (!fireball->m_friendly) {
+		if (!fireball->m_friendly && !fireball->m_explode) {
 			m_life--;
 //cout << "player hit" << endl;
 		}
