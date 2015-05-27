@@ -8,3 +8,5 @@ Built into a Minecraft clone created from scratch for previous coursework, this 
 The basic idea for the game was simple - create a game where people physically move their bodies to dodge incoming projectiles and shoot their own. Since there was only a week for implementation, the Minecraft theme was used as a way of providing a reasonably interesting environment, and work was focused on the core gameplay logic.
 
 The VrFrontend and dependent classes also implement a simpler and easier to use interface for VRG3D's event mechanics, making it possible to create an application with VRG3D without ever having to reference it's classes.
+
+We apologize for the quality of the codebase - working with the YURT was difficult, and given the limited time period in which to develop and test the application, we opted to focus on code functionality rather than quality.
